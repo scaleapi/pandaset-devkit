@@ -18,5 +18,5 @@ class DataSet:
             seq_id = sd.split('/')[-1]
             self.sequences[seq_id] = Sequence(sd)
 
-    def list(self):
+    def sequences(self):
         return list(self.sequences.keys())
