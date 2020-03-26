@@ -5,18 +5,18 @@ from .sequence import Sequence
 class DataSet:
 
     def __init__(self, directory):
-        self.directory = directory
-        self.sequences = {}
-        self.load_sequences()
+        self._directory = directory
+        self._sequences = {}
+        self._load_sequences()
 
     def __getitem__(self, item):
-        return self.sequences[item]
+        return self._sequences[item]
 
-    def load_sequences(self):
-        sequence_directories = subdirectories(self.directory)
+    def _load_sequences(self):
+        sequence_directories = subdirectories(self._directory)
         for sd in sequence_directories:
             seq_id = sd.split('/')[-1]
-            self.sequences[seq_id] = Sequence(sd)
+            self._sequences[seq_id] = Sequence(sd)
 
     def sequences(self):
-        return list(self.sequences.keys())
+        return list(self._sequences.keys())
