@@ -1,5 +1,7 @@
 import glob
 from .utils import subdirectories
+from .sensors import Lidar
+from .sensors import Camera
 import pandas as pd
 
 
@@ -7,16 +9,8 @@ class Sequence:
 
     def __init__(self, directory):
         self.directory = directory
-        self.data_structure = {
-            'lidar': {},
-            'camera': {},
-            'meta': {},
-            'annotations': {}
-        }
-        self.data = {
-            'lidar': [],
-            'camera': {}
-        }
+        self.lidar = None
+        self.camera = None
         self.load_data_structure()
 
     def load_data_structure(self):
@@ -24,17 +18,16 @@ class Sequence:
 
         for dd in data_directories:
             if dd.endswith('lidar'):
-                self.load_lidar_data_structure(dd)
+                self.lidar = Lidar(dd)
+            if dd.endswith('camera'):
+                self.camera = {}
+                camera_directories = subdirectories(dd)
+                for cd in camera_directories:
+                    camera_name = seq_id = cd.split('/')[-1]
+                    self.camera[camera_name] = Camera(cd)
 
-    def load_lidar_data_structure(self, directory):
-        self.data_structure['lidar']['pointclouds'] = sorted(glob.glob(f'{directory}/*.pkl.gz'))
-
-    def load_data(self):
-        self.load_lidar_data()
-
-    def load_lidar_data(self):
-        self.data['lidar'] = []
-        for lf in self.data_structure['lidar']['pointclouds']:
-            self.data['lidar'].append(
-                pd.read_pickle(lf)
-            )
+    def load_data(self, sl=(None, None, None)):
+        data_slice = slice(*sl)
+        self.lidar.load_data(data_slice)
+        for c in self.camera.values():
+            c.load_data(data_slice)
