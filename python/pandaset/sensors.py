@@ -5,9 +5,10 @@ import os.path
 import json
 
 
-class Lidar:
-    def __init__(self, directory):
+class Sensor:
+    def __init__(self, directory, data_file_extension):
         self._directory = directory
+        self._data_file_extension = data_file_extension
         self._data_structure = None
         self.data = None
         self._pose_structure = None
@@ -16,8 +17,11 @@ class Lidar:
         self.timestamps = None
         self._load_data_structure()
 
+    def __getitem__(self, item):
+        return self.data[item]
+
     def _load_data_structure(self):
-        self._data_structure = sorted(glob.glob(f'{self._directory}/*.pkl.gz'))
+        self._data_structure = sorted(glob.glob(f'{self._directory}/*.{self._data_file_extension}'))
 
         positions_file = f'{self._directory}/positions.json'
         if os.path.isfile(positions_file):
@@ -26,6 +30,12 @@ class Lidar:
         timestamps_file = f'{self._directory}/timestamps.json'
         if os.path.isfile(timestamps_file):
             self._timestamps_structure = timestamps_file
+
+
+class Lidar(Sensor):
+
+    def __init__(self, directory):
+        Sensor.__init__(self, directory, 'pkl.gz')
 
     def load_data(self, sl):
         self.data = []
@@ -55,16 +65,9 @@ class Lidar:
                 )
 
 
-class Camera:
+class Camera(Sensor):
     def __init__(self, directory):
-        self._directory = directory
-        self._data_structure = None
-        self.data = None
-        self._pose_structure = None
-        self.poses = None
-        self._timestamps_structure = None
-        self.timestamps = None
-        self._load_data_structure()
+        Sensor.__init__(self, directory, 'jpg')
 
     def _load_data_structure(self):
         self._data_structure = sorted(glob.glob(f'{self._directory}/*.jpg'))
