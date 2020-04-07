@@ -1,3 +1,5 @@
+import os
+
 from .utils import subdirectories
 from .sequence import Sequence
 
@@ -15,7 +17,7 @@ class DataSet:
     def _load_sequences(self):
         sequence_directories = subdirectories(self._directory)
         for sd in sequence_directories:
-            seq_id = sd.split('/')[-1]
+            seq_id = os.path.split(sd)[-1]
             self._sequences[seq_id] = Sequence(sd)
 
     def sequences(self):

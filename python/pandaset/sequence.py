@@ -1,3 +1,5 @@
+import os
+
 from .utils import subdirectories
 from .sensors import Lidar
 from .sensors import Camera
@@ -26,7 +28,7 @@ class Sequence:
                 self.camera = {}
                 camera_directories = subdirectories(dd)
                 for cd in camera_directories:
-                    camera_name = cd.split('/')[-1]
+                    camera_name = os.path.split(cd)[-1]
                     self.camera[camera_name] = Camera(cd)
             if dd.endswith('meta'):
                 self.gps_poses = GPSPoses(dd)
