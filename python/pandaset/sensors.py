@@ -69,6 +69,8 @@ class Sensor:
 class Lidar(Sensor):
 
     def __init__(self, directory):
+        self._intrinsics_structure = None
+        self.intrinsics = None
         Sensor.__init__(self, directory, 'pkl.gz')
 
     def _load_data_file(self, fp):
@@ -78,6 +80,39 @@ class Lidar(Sensor):
 class Camera(Sensor):
     def __init__(self, directory):
         Sensor.__init__(self, directory, 'jpg')
+        self._load_intrinsics()
+
+    def load(self):
+        super().load()
+        self._load_intrinsics()
 
     def _load_data_file(self, fp):
         return Image.open(fp)
+
+    def _load_data_structure(self):
+        super()._load_data_structure()
+        self._load_intrinsics()
+
+    def _load_intrinsics_structure(self):
+        intrinsics_file = f'{self._directory}/intrinsics.json'
+        if os.path.isfile(intrinsics_file):
+            self._intrinsics_structure = intrinsics_file
+
+    def _load_intrinsics(self):
+        self.intrinsics = []
+        with open(self._intrinsics_structure, 'r') as f:
+            file_data = json.load(f)
+            self.intrinsics = Intrinsics(
+                fx=file_data['fx'],
+                fy=file_data['fy'],
+                cx=file_data['cx'],
+                cy=file_data['cy']
+            )
+
+
+class Intrinsics:
+    def __init__(self, fx, fy, cx, cy):
+        self.fx = fx,
+        self.fy = fy,
+        self.cx = cx,
+        self.cy = cy
