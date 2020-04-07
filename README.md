@@ -50,22 +50,13 @@ seq002 = dataset['002']
 
 #### Loading
 The devkit will automatically search the sequence directory for available sensor and meta data and prepare the path for a loading step. At this point no point clouds or images have been loaded into memory.
-To execute the loading of sensor and meta data into memory, we simply call the `load()` method on the sequence object. This will load all available sensor and meta data. If only specific sensors or meta data is required, there are more specific methods available.
+To execute the loading of sensor and meta data into memory, we simply call the `load()` method on the sequence object. This will load all available sensor and meta data. If only specific sensors or meta data is required, there are more specific methods available which can also be chained to each other.
 ```python
 seq002.load()
 
 # OR
 
-seq002.load_lidar()
-seq002.load_camera()
-seq002.load_gps_poses()
-seq002.load_timestamps()
-seq002.load_cuboids()
-```
-
-Since not everybody might want to work with full sampling rate, each of the `load()` methods accept a _3-tuple_ which serves as a slicing information. In the following example, we want every second frame between frame 10 and frame 50 loaded. It is equivalent to slicing a python array using `my_array[10:50:2]`.
-```python
-seq002.load((10, 50, 2))
+seq002.load_lidar().load_cuboids()
 ```
 
 #### Data Access
@@ -73,12 +64,12 @@ seq002.load((10, 50, 2))
 ##### LiDAR
 The LiDAR point clouds are stored as [pandas.DataFrames](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame) and therefore allow to leverage their extensive API for data manipulation. This includes the simple return as a [numpy.ndarray](https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html).
 ```python
-pc0 = seq002.lidar.data[0]
+pc0 = seq002.lidar[0]
 print(pc0.columns)  # Index(['x', 'y', 'z', 'i', 't', 'd'], dtype='object')
 
-pc0_np = seq002.lidar.data[0].to_numpy()
+pc0_np = seq002.lidar[0].to_numpy()
 # OR
-pc0_np = seq002.lidar.data[0].values
+pc0_np = seq002.lidar[0].values
 ```
 
 ##### Cameras
@@ -89,7 +80,7 @@ print(seq002.camera.keys())  # ['front_camera', 'left_camera', 'back_camera', 'r
 Each camera name has its recordings loaded as [Pillow Image](https://pillow.readthedocs.io/en/stable/reference/Image.html) object, and can be accessed via normal list slicing. In the following example, we select the first image from the front camera and display it using the Pillow library in Python.
 ```python
 front_camera = seq002.camera['front_camera']
-img0 = front_camera.data[0]
+img0 = front_camera[0]
 img0.show()
 ```
 Afterwards the extensive Pillow Image API can be used for image manipulation, conversion or export.
@@ -101,7 +92,7 @@ In addition to the sensor data, the loaded data set also contains the following 
 
 These can be directly accessed through the known list slicing operations, and read in their dict format. For example, the following example shows how to get the GPS coordinates of the vehicle on the first frame.
 ```python
-pose0 = seq002.gps_poses.data[0]
+pose0 = seq002.gps[0]
 lat0 = pose0['lat']
 long0 = pose0['long']
 ```
@@ -109,10 +100,10 @@ long0 = pose0['long']
 #### Annotations
 
 The LiDAR Cuboid annotations are also stored inside the sequence object as a [pandas.DataFrames](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame) for each timestamp.
-The position coordinates (`positin.x`,`position.y`,`position.z`) are located at the center of a cuboid. `dimensions.x` is the width of the cuboid from left to right, `dimensions.y` is the length of the cuboid from front to back and `dimensions.z` is the height of the cuboid from top to bottom.
+The position coordinates (`position.x`,`position.y`,`position.z`) are located at the center of a cuboid. `dimensions.x` is the width of the cuboid from left to right, `dimensions.y` is the length of the cuboid from front to back and `dimensions.z` is the height of the cuboid from top to bottom.
 
 ```python
-cuboids0 = seq002.cuboids.data[0]
+cuboids0 = seq002.cuboids[0]
 print(cuboids0.columns)  # Index(['uuid', 'label', 'yaw', 'stationary', 'camera_used', 'position.x', 'position.y', 'position.z', 'dimensions.x', 'dimensions.y', 'dimensions.z', 'attributes.Object Motion', 'attributes.Rider Status', 'attributes.Pedestrian Behavior', 'attributes.Pedestrian Age'], dtype='object')
 ```
 

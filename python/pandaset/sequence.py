@@ -1,7 +1,7 @@
 from .utils import subdirectories
 from .sensors import Lidar
 from .sensors import Camera
-from .meta import GPSPoses
+from .meta import GPS
 from .meta import Timestamps
 from .annotations import Cuboids
 
@@ -11,7 +11,7 @@ class Sequence:
         self._directory = directory
         self.lidar = None
         self.camera = None
-        self.gps_poses = None
+        self.gps = None
         self.timestamps = None
         self.cuboids = None
         self._load_data_structure()
@@ -29,7 +29,7 @@ class Sequence:
                     camera_name = cd.split('/')[-1]
                     self.camera[camera_name] = Camera(cd)
             if dd.endswith('meta'):
-                self.gps_poses = GPSPoses(dd)
+                self.gps = GPS(dd)
                 self.timestamps = Timestamps(dd)
             if dd.endswith('annotations'):
                 annotation_directories = subdirectories(dd)
@@ -37,25 +37,30 @@ class Sequence:
                     if ad.endswith('cuboids'):
                         self.cuboids = Cuboids(ad)
 
-    def load(self, sl=(None, None, None)):
-        self.load_lidar(sl)
-        self.load_camera(sl)
-        self.load_gps_poses(sl)
-        self.load_timestamps(sl)
-        self.load_cuboids(sl)
+    def load(self):
+        self.load_lidar()
+        self.load_camera()
+        self.load_gps()
+        self.load_timestamps()
+        self.load_cuboids()
 
-    def load_lidar(self, sl=(None, None, None)):
-        self.lidar.load_data(slice(*sl))
+    def load_lidar(self):
+        self.lidar.load()
+        return self
 
-    def load_camera(self, sl=(None, None, None)):
-        for c in self.camera.values():
-            c.load_data(slice(*sl))
+    def load_camera(self):
+        for cam in self.camera.values():
+            cam.load()
+        return self
 
-    def load_gps_poses(self, sl=(None, None, None)):
-        self.gps_poses.load_data(slice(*sl))
+    def load_gps(self):
+        self.gps.load()
+        return self
 
-    def load_timestamps(self, sl=(None, None, None)):
-        self.timestamps.load_data(slice(*sl))
+    def load_timestamps(self):
+        self.timestamps.load()
+        return self
 
-    def load_cuboids(self, sl=(None, None, None)):
-        self.cuboids.load_data(slice(*sl))
+    def load_cuboids(self):
+        self.cuboids.load()
+        return self

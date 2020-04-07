@@ -5,7 +5,9 @@ with open('requirements.txt', 'r') as f:
 
 setup(
     name='pandaset',
-    version='0.1dev',
+    version='0.2dev',
+    author='Nisse Knudsen, Pengchuan Xiao',
+    author_email='nisse@scale.com, xiaopengchuan_intern@hesaitech.com',
     packages=['pandaset'],
     python_requires='>=3.6',
     long_description='Pandaset Devkit for Python3',

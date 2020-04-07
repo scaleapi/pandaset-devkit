@@ -1,5 +1,5 @@
-from .utils import subdirectories
 from .sequence import Sequence
+from .utils import subdirectories
 
 
 class DataSet:
