@@ -15,7 +15,61 @@ You will then be forwarded to a page with download links to the raw data and ann
 
 ### Unpack
 
-Unpack the archive into any directory on your hard disk. The path will be referenced by the `pandaset-devkit` later, and does not have to be in the same directory.
+Unpack the archive into any directory on your hard disk. The path will be referenced in usage of `pandaset-devkit` later, and does not have to be in the same directory as your scripts.
+
+### Structure
+
+#### Files & Folders
+
+```
+.
+├── LICENSE.txt
+├── annotations
+│   ├── cuboids
+│   │   ├── 00.pkl.gz
+│   │   ├── 01.pkl.gz
+│   │   ├── ...
+│   │   ├── 78.pkl.gz
+│   │   └── 79.pkl.gz
+│   └── semseg
+│       ├── 00.pkl.gz
+│       ├── 01.pkl.gz
+│       ├── ...
+│       ├── 78.pkl.gz
+│       ├── 79.pkl.gz
+│       └── classes.json
+├── camera
+│   ├── back_camera
+│   │   ├── 00.jpg
+│   │   ├── 01.jpg
+│   │   ├── ...
+│   │   ├── 78.jpg
+│   │   ├── 79.jpg
+│   │   ├── intrinsics.json
+│   │   ├── poses.json
+│   │   └── timestamps.json
+│   ├── front_camera
+│   │   └── ...
+│   ├── front_left_camera
+│   │   └── ...
+│   ├── front_right_camera
+│   │   └── ...
+│   ├── left_camera
+│   │   └── ...
+│   └── right_camera
+│       └── ...
+├── lidar
+│   ├── 00.pkl.gz
+│   ├── 01.pkl.gz
+│   ├── ...
+│   ├── 78.pkl.gz
+│   ├── 79.pkl.gz
+│   ├── poses.json
+│   └── timestamps.json
+└── meta
+    ├── gps.json
+    └── timestamps.json
+```
 
 ## Instructions
 
