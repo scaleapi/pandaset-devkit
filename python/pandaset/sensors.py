@@ -5,9 +5,11 @@ import os.path
 import pandas as pd
 from PIL import Image
 
+from typing import List, overload
+
 
 class Sensor:
-    def __init__(self, directory, data_file_extension):
+    def __init__(self, directory: str, data_file_extension: str):
         self._directory = directory
         self._data_file_extension = data_file_extension
         self._data_structure = None
@@ -17,6 +19,14 @@ class Sensor:
         self._timestamps_structure = None
         self.timestamps = None
         self._load_structure()
+
+    @overload
+    def __getitem__(self, item: int) -> object:
+        ...
+
+    @overload
+    def __getitem__(self, item: slice) -> List[object]:
+        ...
 
     def __getitem__(self, item):
         return self.data[item]
@@ -74,18 +84,34 @@ class Sensor:
 
 
 class Lidar(Sensor):
-    def __init__(self, directory):
+    def __init__(self, directory: str):
         self._intrinsics_structure = None
         self.intrinsics = None
         Sensor.__init__(self, directory, 'pkl.gz')
+
+    @overload
+    def __getitem__(self, item: int) -> pd.DataFrame:
+        ...
+
+    @overload
+    def __getitem__(self, item: slice) -> List[pd.DataFrame]:
+        ...
 
     def _load_data_file(self, fp):
         return pd.read_pickle(fp)
 
 
 class Camera(Sensor):
-    def __init__(self, directory):
+    def __init__(self, directory: str):
         Sensor.__init__(self, directory, 'jpg')
+
+    @overload
+    def __getitem__(self, item: int) -> Image:
+        ...
+
+    @overload
+    def __getitem__(self, item: slice) -> List[Image]:
+        ...
 
     def load(self):
         super().load()
@@ -116,7 +142,7 @@ class Camera(Sensor):
 
 
 class Intrinsics:
-    def __init__(self, fx, fy, cx, cy):
+    def __init__(self, fx: float, fy: float, cx: float, cy: float):
         self.fx = fx,
         self.fy = fy,
         self.cx = cx,
