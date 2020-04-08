@@ -16,18 +16,25 @@ class Sensor:
         self.poses = None
         self._timestamps_structure = None
         self.timestamps = None
-        self._load_data_structure()
+        self._load_structure()
 
     def __getitem__(self, item):
         return self.data[item]
 
+    def _load_structure(self):
+        self._load_data_structure()
+        self._load_poses_structure()
+        self._load_timestamps_structure()
+
     def _load_data_structure(self):
         self._data_structure = sorted(glob.glob(f'{self._directory}/*.{self._data_file_extension}'))
 
+    def _load_poses_structure(self):
         poses_file = f'{self._directory}/poses.json'
         if os.path.isfile(poses_file):
             self._poses_structure = poses_file
 
+    def _load_timestamps_structure(self):
         timestamps_file = f'{self._directory}/timestamps.json'
         if os.path.isfile(timestamps_file):
             self._timestamps_structure = timestamps_file
@@ -67,7 +74,6 @@ class Sensor:
 
 
 class Lidar(Sensor):
-
     def __init__(self, directory):
         self._intrinsics_structure = None
         self.intrinsics = None
@@ -80,23 +86,22 @@ class Lidar(Sensor):
 class Camera(Sensor):
     def __init__(self, directory):
         Sensor.__init__(self, directory, 'jpg')
-        self._load_intrinsics()
 
     def load(self):
         super().load()
         self._load_intrinsics()
 
-    def _load_data_file(self, fp):
-        return Image.open(fp)
-
-    def _load_data_structure(self):
-        super()._load_data_structure()
-        self._load_intrinsics()
+    def _load_structure(self):
+        super()._load_structure()
+        self._load_intrinsics_structure()
 
     def _load_intrinsics_structure(self):
         intrinsics_file = f'{self._directory}/intrinsics.json'
         if os.path.isfile(intrinsics_file):
             self._intrinsics_structure = intrinsics_file
+
+    def _load_data_file(self, fp):
+        return Image.open(fp)
 
     def _load_intrinsics(self):
         self.intrinsics = []
