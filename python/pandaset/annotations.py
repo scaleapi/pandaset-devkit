@@ -1,4 +1,5 @@
 import glob
+
 import pandas as pd
 
 
@@ -8,6 +9,9 @@ class Cuboids:
         self._data_structure = None
         self.data = None
         self._load_data_structure()
+
+    def __getitem__(self, item):
+        return self.data[item]
 
     def _load_data_structure(self):
         self._data_structure = sorted(glob.glob(f'{self._directory}/*.pkl.gz'))
