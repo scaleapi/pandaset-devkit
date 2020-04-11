@@ -15,8 +15,12 @@ def _heading_position_to_mat(heading, position):
 
 
 def projection(lidar: Lidar, camera: Camera, idx: int, filter_outliers=True):
-    assert idx < len(lidar.data), "idx is bigger than lidar sequence lenght or lidar is not loaded"
-    assert idx < len(camera.data), "idx is bigger than camera sequence lenght or camera is not loaded"
+    assert idx < len(
+        lidar.data
+    ), "idx is bigger than lidar sequence lenght or lidar is not loaded"
+    assert idx < len(
+        camera.data
+    ), "idx is bigger than camera sequence lenght or camera is not loaded"
 
     camera_pose = camera.poses[idx]
     camera_heading = camera_pose['heading']
@@ -45,11 +49,14 @@ def projection(lidar: Lidar, camera: Camera, idx: int, filter_outliers=True):
 
     if filter_outliers:
         image_w, image_h = camera.data[0].size
-        condition = np.logical_and((points2d_camera[:, 1] < image_h) & (points2d_camera[:, 1] > 0),
-                                    (points2d_camera[:, 0] < image_w) & (points2d_camera[:, 0] > 0))
+        condition = np.logical_and(
+            (points2d_camera[:, 1] < image_h) & (points2d_camera[:, 1] > 0),
+            (points2d_camera[:, 0] < image_w) & (points2d_camera[:, 0] > 0))
         points2d_camera = points2d_camera[condition]
         points3d_camera = (points3d_camera.T)[condition]
         inliner_idx_arr = inliner_idx_arr[condition]
     return points2d_camera, points3d_camera, inliner_idx_arr
 
 
+if __name__ == '__main__':
+    pass
