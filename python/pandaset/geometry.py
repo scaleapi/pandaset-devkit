@@ -23,6 +23,7 @@ def projection(lidar: Lidar, camera: Camera, idx: int, filter_outliers=True):
     ), "idx is bigger than camera sequence lenght or camera is not loaded"
 
     camera_pose = camera.poses[idx]
+    camera_intrinsics = camera.intrinsics
     camera_heading = camera_pose['heading']
     camera_position = camera_pose['position']
     camera_pose_mat = _heading_position_to_mat(camera_heading, camera_position)
@@ -33,10 +34,10 @@ def projection(lidar: Lidar, camera: Camera, idx: int, filter_outliers=True):
                         trans_lidar_to_camera[:3, 3].reshape(3, 1)
 
     K = np.eye(3, dtype=np.float64)
-    K[0, 0] = camera_pose['fx']
-    K[1, 1] = camera_pose['fy']
-    K[0, 2] = camera_pose['cx']
-    K[1, 2] = camera_pose['cy']
+    K[0, 0] = camera_intrinsics.fx
+    K[1, 1] = camera_intrinsics.fy
+    K[0, 2] = camera_intrinsics.cx
+    K[1, 2] = camera_intrinsics.cy
 
     inliner_idx_arr = np.arange(points3d_camera.shape[1])
     if filter_outliers:
