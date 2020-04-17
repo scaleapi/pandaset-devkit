@@ -18,7 +18,7 @@ class Annotation:
     def _data_file_extension(self) -> str:
         ...
 
-    def __init__(self, directory: str):
+    def __init__(self, directory: str) -> None:
         self._directory: str = directory
         self._data_structure: List[str] = None
         self.data: List[DataFrame] = None
@@ -60,7 +60,7 @@ class Cuboids(Annotation):
     def _data_file_extension(self) -> str:
         return 'pkl.gz'
 
-    def __init__(self, directory: str):
+    def __init__(self, directory: str) -> None:
         Annotation.__init__(self, directory)
 
     @overload
@@ -83,7 +83,7 @@ class SemanticSegmentation(Annotation):
     def _data_file_extension(self) -> str:
         return 'pkl.gz'
 
-    def __init__(self, directory: str):
+    def __init__(self, directory: str) -> None:
         self._classes_structure: str = None
         self.classes: DataFrame = None
         Annotation.__init__(self, directory)

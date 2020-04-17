@@ -14,7 +14,7 @@ class Meta:
     def _filename(self) -> str:
         ...
 
-    def __init__(self, directory: str):
+    def __init__(self, directory: str) -> None:
         self._directory: str = directory
         self._data_structure: str = None
         self.data: List[T] = None
@@ -52,7 +52,7 @@ class GPS(Meta):
     def _filename(self) -> str:
         return 'gps.json'
 
-    def __init__(self, directory: str):
+    def __init__(self, directory: str) -> None:
         Meta.__init__(self, directory)
 
     @overload
@@ -72,7 +72,7 @@ class Timestamps(Meta):
     def _filename(self) -> str:
         return 'timestamps.json'
 
-    def __init__(self, directory: str):
+    def __init__(self, directory: str) -> None:
         Meta.__init__(self, directory)
 
     @overload

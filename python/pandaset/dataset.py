@@ -5,7 +5,7 @@ from .utils import subdirectories
 
 
 class DataSet:
-    def __init__(self, directory: str):
+    def __init__(self, directory: str) -> None:
         self._directory: str = directory
         self._sequences: Dict[str, Sequence] = None
         self._load_sequences()
