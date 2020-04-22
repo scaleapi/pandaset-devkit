@@ -25,7 +25,7 @@ class DataSet:
         self._sequences = {}
         sequence_directories = subdirectories(self._directory)
         for sd in sequence_directories:
-            seq_id = sd.split('/')[-1]
+            seq_id = sd.split('/')[-1].split('\\')[-1]
             self._sequences[seq_id] = Sequence(sd)
 
     def sequences(self) -> List[str]:
