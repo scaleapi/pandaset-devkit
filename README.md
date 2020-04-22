@@ -180,11 +180,11 @@ intrinsics = camera_obj.intrinsics
 ```
 
 #### Meta
-In addition to the sensor data, the loaded data set also contains the following meta information:
+In addition to the sensor data, the loaded dataset also contains the following meta information:
 * GPS Positions
 * Timestamps
 
-These can be directly accessed through the known list slicing operations, and read in their dict format. For example, the following example shows how to get the GPS coordinates of the vehicle on the first frame.
+These can be directly accessed through the known list slicing operations, and read in their dict format. The following example shows how to get the GPS coordinates of the vehicle on the first frame.
 ```python
 pose0 = seq002.gps[0]
 lat0 = pose0['lat']
