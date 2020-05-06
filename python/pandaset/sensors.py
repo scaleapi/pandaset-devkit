@@ -20,7 +20,7 @@ class Sensor:
     def _data_file_extension(self) -> str:
         ...
 
-    def __init__(self, directory: str):
+    def __init__(self, directory: str) -> None:
         self._directory: str = directory
         self._data_structure: List[str] = None
         self.data: List[T] = None
@@ -94,7 +94,7 @@ class Lidar(Sensor):
     def _data_file_extension(self) -> str:
         return 'pkl.gz'
 
-    def __init__(self, directory: str):
+    def __init__(self, directory: str) -> None:
         Sensor.__init__(self, directory)
 
     @overload
@@ -117,7 +117,7 @@ class Camera(Sensor):
     def _data_file_extension(self) -> str:
         return 'jpg'
 
-    def __init__(self, directory: str):
+    def __init__(self, directory: str) -> None:
         self._intrinsics_structure: str = None
         self.intrinsics: 'Camera._Intrinsics' = None
         Sensor.__init__(self, directory)

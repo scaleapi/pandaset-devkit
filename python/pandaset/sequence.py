@@ -10,7 +10,7 @@ from .utils import subdirectories
 
 
 class Sequence:
-    def __init__(self, directory: str):
+    def __init__(self, directory: str) -> None:
         self._directory: str = directory
         self.lidar: Lidar = None
         self.camera: Dict[str, Camera] = None
