@@ -24,15 +24,7 @@ class DataSet:
         self._sequences: Dict[str, Sequence] = None
         self._load_sequences()
 
-    @overload
-    def __getitem__(self, item: int) -> Sequence:
-        ...
-
-    @overload
-    def __getitem__(self, item: slice) -> List[Sequence]:
-        ...
-
-    def __getitem__(self, item):
+    def __getitem__(self, item) -> Sequence:
         return self._sequences[item]
 
     def _load_sequences(self) -> None:
