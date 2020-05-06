@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import json
 import os.path
 from abc import ABCMeta, abstractmethod

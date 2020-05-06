@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import glob
 import json
 import os
@@ -5,7 +6,6 @@ from abc import ABCMeta, abstractmethod
 from typing import overload, List, TypeVar, Dict
 
 import pandas as pd
-from pandas.core.frame import DataFrame
 
 T = TypeVar('T')
 
