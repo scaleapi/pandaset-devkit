@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import numpy as np
 import transforms3d as t3d
 

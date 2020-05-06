@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from typing import overload, List, Dict
 
 from .sequence import Sequence
