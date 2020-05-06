@@ -14,13 +14,22 @@ def _heading_position_to_mat(heading, position):
     return transform_matrix
 
 
-def projection(lidar_points, camera_data, camera_pose, camera_intrinsics, filter_outliers=True):
+def projection(lidar: Lidar, camera: Camera, idx: int, filter_outliers=True):
+    assert idx < len(
+        lidar.data
+    ), "idx is bigger than lidar sequence lenght or lidar is not loaded"
+    assert idx < len(
+        camera.data
+    ), "idx is bigger than camera sequence lenght or camera is not loaded"
+
+    camera_pose = camera.poses[idx]
+    camera_intrinsics = camera.intrinsics
     camera_heading = camera_pose['heading']
     camera_position = camera_pose['position']
     camera_pose_mat = _heading_position_to_mat(camera_heading, camera_position)
 
     trans_lidar_to_camera = np.linalg.inv(camera_pose_mat)
-    points3d_lidar = lidar_points
+    points3d_lidar = lidar.data[idx].to_numpy()[:, :3]
     points3d_camera = trans_lidar_to_camera[:3, :3] @ (points3d_lidar.T) + \
                         trans_lidar_to_camera[:3, 3].reshape(3, 1)
 
@@ -40,7 +49,7 @@ def projection(lidar_points, camera_data, camera_pose, camera_intrinsics, filter
     points2d_camera = (points2d_camera[:2, :] / points2d_camera[2, :]).T
 
     if filter_outliers:
-        image_w, image_h = camera_data.size
+        image_w, image_h = camera.data[0].size
         condition = np.logical_and(
             (points2d_camera[:, 1] < image_h) & (points2d_camera[:, 1] > 0),
             (points2d_camera[:, 0] < image_w) & (points2d_camera[:, 0] > 0))

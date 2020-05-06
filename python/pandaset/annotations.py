@@ -99,7 +99,7 @@ class Cuboids(Annotation):
         """Returns annotation data array.
 
         Returns:
-            List of semantic segmentation data frames. Each data frame has columns as follows:
+            List of cuboid data frames. Each data frame has columns as follows:
                 - index: `int`
                     - Each row corresponds to one cuboid. The index order is arbitrary.
                 - `uuid`: `str
