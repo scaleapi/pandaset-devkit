@@ -17,7 +17,7 @@ class Meta:
          directory: Absolute or relative path where annotation files are stored
 
     Attributes:
-        _data: List of meta data objects. The type of list elements depends on the subclass specific meta data type.
+        data: List of meta data objects. The type of list elements depends on the subclass specific meta data type.
     """
     __metaclass__ = ABCMeta
 

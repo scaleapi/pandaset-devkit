@@ -111,7 +111,7 @@ class Sequence:
                     if ad.endswith('cuboids'):
                         self._cuboids = Cuboids(ad)
                     elif ad.endswith('semseg'):
-                        self.semseg = SemanticSegmentation(ad)
+                        self._semseg = SemanticSegmentation(ad)
 
     def load(self) -> 'Sequence':
         """Loads all sequence files from disk into memory.
