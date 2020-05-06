@@ -5,12 +5,12 @@
 
 ## Overview
 
-Welcome to the repository of the [Pandaset](https://pandaset.org/ "Pandaset Official Website") Devkit.
+Welcome to the repository of the [PandaSet](https://pandaset.org/ "Pandaset Official Website") Devkit.
 
 ## Dataset
 ### Download
 
-To download the data set, please visit the official [Pandaset](https://pandaset.org/ "Pandaset Official Website") webpage and signed up through the form.
+To download the dataset, please visit the official [PandaSet](https://pandaset.org/ "Pandaset Official Website") webpage and sign up through the form.
 You will then be forwarded to a page with download links to the raw data and annotations.
 
 ### Unpack
@@ -86,32 +86,32 @@ The `pandaset-devkit` is now installed in your Python>=3.6 environment and can b
 
 ### Usage
 
-To get familiar with the API you can use the test sequence which is available in this repo under `test/data`, or you can point directly to the downloaded data set.
+To get familiar with the API, you can use the test sequence that is available in this repo under `test/data`, or you can point directly to the downloaded dataset.
 
-#### Initilization
-First we need to create a `DataSet` object which searches for sequences.
+#### Initialization
+First, we need to create a `DataSet` object that searches for sequences.
 ```python
 from pandaset import DataSet
 dataset = DataSet('test/data')
 ```
-Afterwards we can list all the sequence IDs which have been found in the data folder.
+Afterwards we can list all the sequence IDs that have been found in the data folder.
 ```python
 print(dataset.sequences())  # ['002']
 ```
 
-Now we access a specific sequence by choosing its key from the previously returned list, in this case sequence ID `'002'`
+Now, we access a specific sequence by choosing its key from the previously returned list, in this case sequence ID `'002'`
 ```python
 seq002 = dataset['002']
 ```
 
 #### Loading
-The devkit will automatically search the sequence directory for available sensor data, meta data and annotations and prepare the directory to be loaded explicitly. At this point no point clouds or images have been loaded into memory.
-To execute the loading of sensor and meta data into memory, we simply call the `load()` method on the sequence object. This will load all available sensor and meta data. 
+The devkit will automatically search the sequence directory for available sensor data, metadata and annotations and prepare the directory to be loaded explicitly. At this point no point clouds or images have been loaded into memory.
+To execute the loading of sensor data and metadata into memory, we simply call the `load()` method on the sequence object. This will load all available sensor data and metadata. 
 ```python
 seq002.load()
 ```
 
-If only certain data is required for analysis, there are more specific methods available which can also be chained to each other.
+If only certain data is required for analysis, there are more specific methods available, which can also be chained to each other.
 ```python
 seq002.load_lidar().load_cuboids()
 ```
@@ -119,7 +119,7 @@ seq002.load_lidar().load_cuboids()
 #### Data Access
 
 ##### LiDAR
-The LiDAR point clouds are stored as [pandas.DataFrames](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame) and therefore allow to leverage their extensive API for data manipulation. This includes the simple return as a [numpy.ndarray](https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html).
+The LiDAR point clouds are stored as [pandas.DataFrames](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame) and therefore you are able to leverage their extensive API for data manipulation. This includes the simple return as a [numpy.ndarray](https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html).
 ```python
 pc0 = seq002.lidar[0]  # Returns the first LiDAR frame in sequence
 print(pc0.columns)  # Index(['x', 'y', 'z', 'i', 't', 'd'], dtype='object')
@@ -128,7 +128,7 @@ print(pc0.columns)  # Index(['x', 'y', 'z', 'i', 't', 'd'], dtype='object')
 pc0_np = seq002.lidar[0].values  # Returns the first LiDAR frame in the sequence as an numpy ndarray
 ```
 
-The LiDAR points are stored in a world coordinate system, therefore it is not required to transform them using the vehicle's pose graph. This allows to query all LiDAR frames in the sequence or a certain sampling rate and simply visualize them using your preferred library.
+The LiDAR points are stored in a world coordinate system; therefore it is not required to transform them using the vehicle's pose graph. This allows you to query all LiDAR frames in the sequence or a certain sampling rate and simply visualize them using your preferred library.
 ```python
 pc_all = seq002.lidar[:]  # Returns all LiDAR frames from the sequence
 ```
@@ -164,7 +164,7 @@ img0.show()
 ```
 Afterwards the extensive Pillow Image API can be used for image manipulation, conversion or export.
 
-Similar to the `Lidar` object, each `Camera` object has properties which hold the camera pose (`camera.poses`) and timestamp (`camera.timestamps`) for every recorded frame, as well as the camera intrinsics (`camera.intrinsics`).
+Similar to the `Lidar` object, each `Camera` object has properties that hold the camera pose (`camera.poses`) and timestamp (`camera.timestamps`) for every recorded frame, as well as the camera intrinsics (`camera.intrinsics`).
 Again, the objects can be sliced the same way as the `Camera` object:
 
 ```python
@@ -180,11 +180,11 @@ intrinsics = camera_obj.intrinsics
 ```
 
 #### Meta
-In addition to the sensor data, the loaded data set also contains the following meta information:
+In addition to the sensor data, the loaded dataset also contains the following meta information:
 * GPS Positions
 * Timestamps
 
-These can be directly accessed through the known list slicing operations, and read in their dict format. For example, the following example shows how to get the GPS coordinates of the vehicle on the first frame.
+These can be directly accessed through the known list slicing operations, and read in their dict format. The following example shows how to get the GPS coordinates of the vehicle on the first frame.
 ```python
 pose0 = seq002.gps[0]
 lat0 = pose0['lat']

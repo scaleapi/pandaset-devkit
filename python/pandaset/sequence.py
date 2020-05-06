@@ -29,7 +29,7 @@ class Sequence:
                 self.camera = {}
                 camera_directories = subdirectories(dd)
                 for cd in camera_directories:
-                    camera_name = cd.split('/')[-1]
+                    camera_name = cd.split('/')[-1].split('\\')[-1]
                     self.camera[camera_name] = Camera(cd)
             elif dd.endswith('meta'):
                 self.gps = GPS(dd)
