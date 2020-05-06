@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>pandaset.meta API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>pandaset.meta</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">#!/usr/bin/env python3
+import json
+import os.path
+from abc import ABCMeta, abstractmethod
+from typing import TypeVar, List, overload, Dict
+
+T = TypeVar(&#39;T&#39;)
+
+
+class Meta:
+    &#34;&#34;&#34;Meta class inherited by subclasses for more specific meta data types.
+
+    ``Meta`` provides generic preparation and loading methods for PandaSet folder structures. Subclasses
+    for specific meta data types must implement certain methods, as well as can override existing ones for extension.
+
+    Args:
+         directory: Absolute or relative path where annotation files are stored
+
+    Attributes:
+        data: List of meta data objects. The type of list elements depends on the subclass specific meta data type.
+    &#34;&#34;&#34;
+    __metaclass__ = ABCMeta
+
+    @property
+    @abstractmethod
+    def _filename(self) -&gt; str:
+        ...
+
+    @property
+    def data(self) -&gt; List[T]:
+        &#34;&#34;&#34;Returns meta data array.
+
+        Subclasses can use any type inside array.
+        &#34;&#34;&#34;
+        return self._data
+
+    def __init__(self, directory: str) -&gt; None:
+        self._directory: str = directory
+        self._data_structure: str = None
+        self._data: List[T] = None
+        self._load_data_structure()
+
+    @overload
+    def __getitem__(self, item: int) -&gt; T:
+        ...
+
+    @overload
+    def __getitem__(self, item: slice) -&gt; List[T]:
+        ...
+
+    def __getitem__(self, item):
+        return self._data[item]
+
+    def load(self) -&gt; None:
+        &#34;&#34;&#34;Loads all meta data files from disk into memory.
+
+        All meta data files are loaded into memory in filename order.
+        &#34;&#34;&#34;
+        self._load_data()
+
+    def _load_data_structure(self) -&gt; None:
+        meta_file = f&#39;{self._directory}/{self._filename}&#39;
+        if os.path.isfile(meta_file):
+            self._data_structure = meta_file
+
+    def _load_data(self) -&gt; None:
+        self._data = []
+        with open(self._data_structure, &#39;r&#39;) as f:
+            file_data = json.load(f)
+            for entry in file_data:
+                self._data.append(entry)
+
+
+class GPS(Meta):
+    &#34;&#34;&#34;GPS data for each timestamp in this sequence.
+
+    ``GPS`` provides GPS data for each timestamp. GPS data can be retrieved by slicing an instanced ``GPS`` class. (see example)
+
+    Args:
+         directory: Absolute or relative path where annotation files are stored
+
+    Attributes:
+        data: List of meta data objects. The type of list elements depends on the subclass specific meta data type.
+
+    Examples:
+        Assuming an instance `s` of class ``Sequence``, you can get GPS data for the first 5 frames in the sequence as follows:
+        &gt;&gt;&gt; s.load_gps()
+        &gt;&gt;&gt; gps_data_0_5 = s.gps[:5]
+        &gt;&gt;&gt; print(gps_data_0_5)
+        [{&#39;lat&#39;: 37.776089291519924, &#39;long&#39;: -122.39931707791749, &#39;height&#39;: 2.950900131607181, &#39;xvel&#39;: 0.0014639192106827986, &#39;yvel&#39;: 0.15895995994754034}, ...]
+    &#34;&#34;&#34;
+    @property
+    def _filename(self) -&gt; str:
+        return &#39;gps.json&#39;
+
+    @property
+    def data(self) -&gt; List[Dict[str, float]]:
+        &#34;&#34;&#34;Returns GPS data array.
+
+        For every timestamp in the sequence, the GPS data contains vehicle latitude, longitude, height and velocity.
+
+        Returns:
+            List of dictionaries. Each dictionary has `str` keys and return types as follows:
+                - `lat`: `float`
+                    - Latitude in decimal degree format. Positive value corresponds to North, negative value to South.
+                - `long`: `float`
+                    - Longitude in decimal degree format. Positive value indicates East, negative value to West.
+                - `height`: `float`
+                    - Measured height in meters.
+                - `xvel`: `float`
+                    - Velocity in m/s
+                - `yvel`: `float`
+                    - Velocity in m/s
+
+        &#34;&#34;&#34;
+        return self._data
+
+    def __init__(self, directory: str) -&gt; None:
+        Meta.__init__(self, directory)
+
+    @overload
+    def __getitem__(self, item: int) -&gt; Dict[str, T]:
+        ...
+
+    @overload
+    def __getitem__(self, item: slice) -&gt; List[Dict[str, T]]:
+        ...
+
+    def __getitem__(self, item):
+        return self._data[item]
+
+
+class Timestamps(Meta):
+    @property
+    def _filename(self) -&gt; str:
+        return &#39;timestamps.json&#39;
+
+    @property
+    def data(self) -&gt; List[float]:
+        &#34;&#34;&#34;Returns timestamp array.
+
+        For every frame in this sequence, this property stores the recorded timestamp.
+
+        Returns:
+            List of timestamps as `float`
+        &#34;&#34;&#34;
+        return self._data
+
+    def __init__(self, directory: str) -&gt; None:
+        Meta.__init__(self, directory)
+
+    @overload
+    def __getitem__(self, item: int) -&gt; float:
+        ...
+
+    @overload
+    def __getitem__(self, item: slice) -&gt; List[float]:
+        ...
+
+    def __getitem__(self, item):
+        return self._data[item]
+
+
+if __name__ == &#39;__main__&#39;:
+    pass</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="pandaset.meta.GPS"><code class="flex name class">
+<span>class <span class="ident">GPS</span></span>
+<span>(</span><span>directory: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>GPS data for each timestamp in this sequence.</p>
+<p><code><a title="pandaset.meta.GPS" href="#pandaset.meta.GPS">GPS</a></code> provides GPS data for each timestamp. GPS data can be retrieved by slicing an instanced <code><a title="pandaset.meta.GPS" href="#pandaset.meta.GPS">GPS</a></code> class. (see example)</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>directory</code></strong></dt>
+<dd>Absolute or relative path where annotation files are stored</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>data</code></strong></dt>
+<dd>List of meta data objects. The type of list elements depends on the subclass specific meta data type.</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<p>Assuming an instance <code>s</code> of class <code>Sequence</code>, you can get GPS data for the first 5 frames in the sequence as follows:</p>
+<pre><code class="python">&gt;&gt;&gt; s.load_gps()
+&gt;&gt;&gt; gps_data_0_5 = s.gps[:5]
+&gt;&gt;&gt; print(gps_data_0_5)
+[{'lat': 37.776089291519924, 'long': -122.39931707791749, 'height': 2.950900131607181, 'xvel': 0.0014639192106827986, 'yvel': 0.15895995994754034}, ...]
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GPS(Meta):
+    &#34;&#34;&#34;GPS data for each timestamp in this sequence.
+
+    ``GPS`` provides GPS data for each timestamp. GPS data can be retrieved by slicing an instanced ``GPS`` class. (see example)
+
+    Args:
+         directory: Absolute or relative path where annotation files are stored
+
+    Attributes:
+        data: List of meta data objects. The type of list elements depends on the subclass specific meta data type.
+
+    Examples:
+        Assuming an instance `s` of class ``Sequence``, you can get GPS data for the first 5 frames in the sequence as follows:
+        &gt;&gt;&gt; s.load_gps()
+        &gt;&gt;&gt; gps_data_0_5 = s.gps[:5]
+        &gt;&gt;&gt; print(gps_data_0_5)
+        [{&#39;lat&#39;: 37.776089291519924, &#39;long&#39;: -122.39931707791749, &#39;height&#39;: 2.950900131607181, &#39;xvel&#39;: 0.0014639192106827986, &#39;yvel&#39;: 0.15895995994754034}, ...]
+    &#34;&#34;&#34;
+    @property
+    def _filename(self) -&gt; str:
+        return &#39;gps.json&#39;
+
+    @property
+    def data(self) -&gt; List[Dict[str, float]]:
+        &#34;&#34;&#34;Returns GPS data array.
+
+        For every timestamp in the sequence, the GPS data contains vehicle latitude, longitude, height and velocity.
+
+        Returns:
+            List of dictionaries. Each dictionary has `str` keys and return types as follows:
+                - `lat`: `float`
+                    - Latitude in decimal degree format. Positive value corresponds to North, negative value to South.
+                - `long`: `float`
+                    - Longitude in decimal degree format. Positive value indicates East, negative value to West.
+                - `height`: `float`
+                    - Measured height in meters.
+                - `xvel`: `float`
+                    - Velocity in m/s
+                - `yvel`: `float`
+                    - Velocity in m/s
+
+        &#34;&#34;&#34;
+        return self._data
+
+    def __init__(self, directory: str) -&gt; None:
+        Meta.__init__(self, directory)
+
+    @overload
+    def __getitem__(self, item: int) -&gt; Dict[str, T]:
+        ...
+
+    @overload
+    def __getitem__(self, item: slice) -&gt; List[Dict[str, T]]:
+        ...
+
+    def __getitem__(self, item):
+        return self._data[item]</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pandaset.meta.Meta" href="#pandaset.meta.Meta">Meta</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="pandaset.meta.GPS.data"><code class="name">var <span class="ident">data</span> : List[Dict[str, float]]</code></dt>
+<dd>
+<div class="desc"><p>Returns GPS data array.</p>
+<p>For every timestamp in the sequence, the GPS data contains vehicle latitude, longitude, height and velocity.</p>
+<h2 id="returns">Returns</h2>
+<p>List of dictionaries. Each dictionary has <code>str</code> keys and return types as follows:
+- <code>lat</code>: <code>float</code>
+- Latitude in decimal degree format. Positive value corresponds to North, negative value to South.
+- <code>long</code>: <code>float</code>
+- Longitude in decimal degree format. Positive value indicates East, negative value to West.
+- <code>height</code>: <code>float</code>
+- Measured height in meters.
+- <code>xvel</code>: <code>float</code>
+- Velocity in m/s
+- <code>yvel</code>: <code>float</code>
+- Velocity in m/s</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def data(self) -&gt; List[Dict[str, float]]:
+    &#34;&#34;&#34;Returns GPS data array.
+
+    For every timestamp in the sequence, the GPS data contains vehicle latitude, longitude, height and velocity.
+
+    Returns:
+        List of dictionaries. Each dictionary has `str` keys and return types as follows:
+            - `lat`: `float`
+                - Latitude in decimal degree format. Positive value corresponds to North, negative value to South.
+            - `long`: `float`
+                - Longitude in decimal degree format. Positive value indicates East, negative value to West.
+            - `height`: `float`
+                - Measured height in meters.
+            - `xvel`: `float`
+                - Velocity in m/s
+            - `yvel`: `float`
+                - Velocity in m/s
+
+    &#34;&#34;&#34;
+    return self._data</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="pandaset.meta.Meta" href="#pandaset.meta.Meta">Meta</a></b></code>:
+<ul class="hlist">
+<li><code><a title="pandaset.meta.Meta.load" href="#pandaset.meta.Meta.load">load</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="pandaset.meta.Meta"><code class="flex name class">
+<span>class <span class="ident">Meta</span></span>
+<span>(</span><span>directory: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Meta class inherited by subclasses for more specific meta data types.</p>
+<p><code><a title="pandaset.meta.Meta" href="#pandaset.meta.Meta">Meta</a></code> provides generic preparation and loading methods for PandaSet folder structures. Subclasses
+for specific meta data types must implement certain methods, as well as can override existing ones for extension.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>directory</code></strong></dt>
+<dd>Absolute or relative path where annotation files are stored</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>data</code></strong></dt>
+<dd>List of meta data objects. The type of list elements depends on the subclass specific meta data type.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Meta:
+    &#34;&#34;&#34;Meta class inherited by subclasses for more specific meta data types.
+
+    ``Meta`` provides generic preparation and loading methods for PandaSet folder structures. Subclasses
+    for specific meta data types must implement certain methods, as well as can override existing ones for extension.
+
+    Args:
+         directory: Absolute or relative path where annotation files are stored
+
+    Attributes:
+        data: List of meta data objects. The type of list elements depends on the subclass specific meta data type.
+    &#34;&#34;&#34;
+    __metaclass__ = ABCMeta
+
+    @property
+    @abstractmethod
+    def _filename(self) -&gt; str:
+        ...
+
+    @property
+    def data(self) -&gt; List[T]:
+        &#34;&#34;&#34;Returns meta data array.
+
+        Subclasses can use any type inside array.
+        &#34;&#34;&#34;
+        return self._data
+
+    def __init__(self, directory: str) -&gt; None:
+        self._directory: str = directory
+        self._data_structure: str = None
+        self._data: List[T] = None
+        self._load_data_structure()
+
+    @overload
+    def __getitem__(self, item: int) -&gt; T:
+        ...
+
+    @overload
+    def __getitem__(self, item: slice) -&gt; List[T]:
+        ...
+
+    def __getitem__(self, item):
+        return self._data[item]
+
+    def load(self) -&gt; None:
+        &#34;&#34;&#34;Loads all meta data files from disk into memory.
+
+        All meta data files are loaded into memory in filename order.
+        &#34;&#34;&#34;
+        self._load_data()
+
+    def _load_data_structure(self) -&gt; None:
+        meta_file = f&#39;{self._directory}/{self._filename}&#39;
+        if os.path.isfile(meta_file):
+            self._data_structure = meta_file
+
+    def _load_data(self) -&gt; None:
+        self._data = []
+        with open(self._data_structure, &#39;r&#39;) as f:
+            file_data = json.load(f)
+            for entry in file_data:
+                self._data.append(entry)</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="pandaset.meta.GPS" href="#pandaset.meta.GPS">GPS</a></li>
+<li><a title="pandaset.meta.Timestamps" href="#pandaset.meta.Timestamps">Timestamps</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="pandaset.meta.Meta.data"><code class="name">var <span class="ident">data</span> : List[~T]</code></dt>
+<dd>
+<div class="desc"><p>Returns meta data array.</p>
+<p>Subclasses can use any type inside array.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def data(self) -&gt; List[T]:
+    &#34;&#34;&#34;Returns meta data array.
+
+    Subclasses can use any type inside array.
+    &#34;&#34;&#34;
+    return self._data</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="pandaset.meta.Meta.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>self) -> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Loads all meta data files from disk into memory.</p>
+<p>All meta data files are loaded into memory in filename order.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load(self) -&gt; None:
+    &#34;&#34;&#34;Loads all meta data files from disk into memory.
+
+    All meta data files are loaded into memory in filename order.
+    &#34;&#34;&#34;
+    self._load_data()</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="pandaset.meta.Timestamps"><code class="flex name class">
+<span>class <span class="ident">Timestamps</span></span>
+<span>(</span><span>directory: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Meta class inherited by subclasses for more specific meta data types.</p>
+<p><code><a title="pandaset.meta.Meta" href="#pandaset.meta.Meta">Meta</a></code> provides generic preparation and loading methods for PandaSet folder structures. Subclasses
+for specific meta data types must implement certain methods, as well as can override existing ones for extension.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>directory</code></strong></dt>
+<dd>Absolute or relative path where annotation files are stored</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>data</code></strong></dt>
+<dd>List of meta data objects. The type of list elements depends on the subclass specific meta data type.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Timestamps(Meta):
+    @property
+    def _filename(self) -&gt; str:
+        return &#39;timestamps.json&#39;
+
+    @property
+    def data(self) -&gt; List[float]:
+        &#34;&#34;&#34;Returns timestamp array.
+
+        For every frame in this sequence, this property stores the recorded timestamp.
+
+        Returns:
+            List of timestamps as `float`
+        &#34;&#34;&#34;
+        return self._data
+
+    def __init__(self, directory: str) -&gt; None:
+        Meta.__init__(self, directory)
+
+    @overload
+    def __getitem__(self, item: int) -&gt; float:
+        ...
+
+    @overload
+    def __getitem__(self, item: slice) -&gt; List[float]:
+        ...
+
+    def __getitem__(self, item):
+        return self._data[item]</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pandaset.meta.Meta" href="#pandaset.meta.Meta">Meta</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="pandaset.meta.Timestamps.data"><code class="name">var <span class="ident">data</span> : List[float]</code></dt>
+<dd>
+<div class="desc"><p>Returns timestamp array.</p>
+<p>For every frame in this sequence, this property stores the recorded timestamp.</p>
+<h2 id="returns">Returns</h2>
+<p>List of timestamps as <code>float</code></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def data(self) -&gt; List[float]:
+    &#34;&#34;&#34;Returns timestamp array.
+
+    For every frame in this sequence, this property stores the recorded timestamp.
+
+    Returns:
+        List of timestamps as `float`
+    &#34;&#34;&#34;
+    return self._data</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="pandaset.meta.Meta" href="#pandaset.meta.Meta">Meta</a></b></code>:
+<ul class="hlist">
+<li><code><a title="pandaset.meta.Meta.load" href="#pandaset.meta.Meta.load">load</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="pandaset" href="index.html">pandaset</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="pandaset.meta.GPS" href="#pandaset.meta.GPS">GPS</a></code></h4>
+<ul class="">
+<li><code><a title="pandaset.meta.GPS.data" href="#pandaset.meta.GPS.data">data</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="pandaset.meta.Meta" href="#pandaset.meta.Meta">Meta</a></code></h4>
+<ul class="">
+<li><code><a title="pandaset.meta.Meta.data" href="#pandaset.meta.Meta.data">data</a></code></li>
+<li><code><a title="pandaset.meta.Meta.load" href="#pandaset.meta.Meta.load">load</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="pandaset.meta.Timestamps" href="#pandaset.meta.Timestamps">Timestamps</a></code></h4>
+<ul class="">
+<li><code><a title="pandaset.meta.Timestamps.data" href="#pandaset.meta.Timestamps.data">data</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

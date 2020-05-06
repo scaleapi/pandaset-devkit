@@ -1,0 +1,1009 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>pandaset.annotations API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>pandaset.annotations</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">#!/usr/bin/env python3
+import glob
+import json
+import os
+from abc import ABCMeta, abstractmethod
+from typing import overload, List, TypeVar, Dict
+
+import pandas as pd
+
+T = TypeVar(&#39;T&#39;)
+
+
+class Annotation:
+    &#34;&#34;&#34;Meta class inherited by subclasses for more specific annotation types.
+
+    ``Annotation`` provides generic preparation and loading methods for PandaSet folder structures. Subclasses
+    for specific annotation styles must implement certain methods, as well as can override existing ones for extension.
+
+    Args:
+         directory: Absolute or relative path where annotation files are stored
+
+    Attributes:
+        data: List of annotation data objects. The type of list elements depends on the subclass implementation of protected method ``_load_data_file``
+    &#34;&#34;&#34;
+    __metaclass__ = ABCMeta
+
+    @property
+    @abstractmethod
+    def _data_file_extension(self) -&gt; str:
+        ...
+
+    @property
+    def data(self) -&gt; List[T]:
+        &#34;&#34;&#34;Returns annotation data array.
+
+        Subclasses can use any type inside array.
+        &#34;&#34;&#34;
+        return self._data
+
+    def __init__(self, directory: str) -&gt; None:
+        self._directory: str = directory
+        self._data_structure: List[str] = None
+        self._data: List[T] = None
+        self._load_structure()
+
+    @overload
+    def __getitem__(self, item: int) -&gt; T:
+        ...
+
+    @overload
+    def __getitem__(self, item: slice) -&gt; List[T]:
+        ...
+
+    def __getitem__(self, item):
+        return self.data[item]
+
+    def _load_structure(self) -&gt; None:
+        self._load_data_structure()
+
+    def _load_data_structure(self) -&gt; None:
+        self._data_structure = sorted(
+            glob.glob(f&#39;{self._directory}/*.{self._data_file_extension}&#39;))
+
+    def load(self) -&gt; None:
+        &#34;&#34;&#34;Loads all annotation files from disk into memory.
+
+        All annotation files are loaded into memory in filename order.
+        &#34;&#34;&#34;
+        self._load_data()
+
+    def _load_data(self) -&gt; None:
+        self._data = []
+        for fp in self._data_structure:
+            self._data.append(self._load_data_file(fp))
+
+    @abstractmethod
+    def _load_data_file(self, fp: str) -&gt; None:
+        ...
+
+
+class Cuboids(Annotation):
+    &#34;&#34;&#34;Loads and provides Cuboid annotations. Subclass of ``Annotation``.
+
+    ``Cuboids`` loads files in `{sequence_id}/annotations/annotations/cuboids/` containing cuboid annotations.
+
+    Args:
+         directory: Absolute or relative path where annotation files are stored
+
+    Attributes:
+        data: List of cuboids for each frame of scene.
+    &#34;&#34;&#34;
+
+    @property
+    def _data_file_extension(self) -&gt; str:
+        return &#39;pkl.gz&#39;
+
+    @property
+    def data(self) -&gt; List[pd.DataFrame]:
+        &#34;&#34;&#34;Returns annotation data array.
+
+        Returns:
+            List of cuboid data frames. Each data frame has columns as follows:
+                - index: `int`
+                    - Each row corresponds to one cuboid. The index order is arbitrary.
+                - `uuid`: `str
+                    - Unique identifier for an object. If object is tracked within the sequence, the `uuid` stays the same on every frame.
+                - `label`: `str`
+                    - Contains name of object class associated with drawn cuboid.
+                - `yaw`: `str`
+                    - Rotation of cuboid around the z-axis. Given in _radians_ from which the cuboid is rotated along the z-axis. 0 radians is equivalent to the direction of the vector `(0, 1, 0)`. The vector points at the length-side. Rotation happens counter-clockwise, i.e., PI/2 is pointing in the same direction as the vector `(-1, 0, 0)`.
+                - `stationary`: `bool`
+                    - `True` if object is stationary in the whole scene, e.g., a parked car or traffic light. Otherwise `False`.
+                - `camera_used`: `int`
+                    - Reference to the camera which was used to validate cuboid position in projection. If no camera was explicitly used, value is set to `-1`.
+                - `position.x`: `float`
+                    - Position of the cuboid expressed as the center of the cuboid. Value is in world-coordinate system.
+                - `position.y`: `float`
+                    - Position of the cuboid expressed as the center of the cuboid. Value is in world-coordinate system.
+                - `position.z`: `float`
+                    - Position of the cuboid expressed as the center of the cuboid. Value is in world-coordinate system.
+                - `dimensions.x`: `float`
+                    - The dimensions of the cuboid based on the world dimensions. Width of the cuboid from left to right.
+                - `dimensions.y`: `float`
+                    - The dimensions of the cuboid based on the world dimensions. Length of the cuboid from front to back.
+                - `dimensions.z`: `float`
+                    - The dimensions of the cuboid based on the world dimensions. Height of the cuboid from top to bottom.
+                - `attributes.object_motion`: `str`
+                    - Values are `Parked`, `Stopped` or `Moving`.
+                    - Set for cuboids with `label` values in
+                        - _Car_
+                        - _Pickup Truck_
+                        - _Medium-sized Truck_
+                        - _Semi-truck_
+                        - _Towed Object_
+                        - _Motorcycle_
+                        - _Other Vehicle - Construction Vehicle_
+                        - _Other Vehicle - Uncommon_
+                        - _Other Vehicle - Pedicab_
+                        - _Emergency Vehicle_
+                        - _Bus_
+                        - _Personal Mobility Device_
+                        - _Motorized Scooter_
+                        - _Bicycle_
+                        - _Train_
+                        - _Trolley_
+                        - _Tram / Subway_
+                - `attributes.rider_status`: `str`
+                    - Values are `With Rider` or `Without Rider`.
+                    - Set for cuboids with `label` values in
+                        - _Motorcycle_
+                        - _Personal Mobility Device_
+                        - _Motorized Scooter_
+                        - _Bicycle_
+                        - _Animals - Other_
+                - `attributes.pedestrian_behavior`: `str`
+                    - Value are `Sitting`, `Lying`, `Walking` or `Standing`
+                    - Set for cuboids with `label` values in
+                        - _Pedestrian_
+                        - _Pedestrian with Object_
+                - `attributes.pedestrian_age`: `str`
+                    - Value are `Adult` or `Child` (less than ~18 years old)
+                    - Set for cuboids with `label` values in
+                        - _Pedestrian_
+                        - _Pedestrian with Object_
+                - `cuboids.sensor_id`: `int`
+                    - For the overlap area between mechanical 360° LiDAR and front-facing LiDAR, moving objects received two cuboids to compensate for synchronization differences of both sensors. If cuboid is in this overlapping area and moving, this value is either `0` (mechanical 360° LiDAR) or `1` (front-facing LiDAR). All other cuboids have value `-1`.
+                - `cuboids.sibling_id`: `str`
+                    - For cuboids which have `cuboids.sensor_id` set to `0` or `1`: this field stores the `uuid` of the sibling cuboid, i.e., measuring the same object in the overlap region, but with the other respective sensor.
+
+        &#34;&#34;&#34;
+        return self._data
+
+    def __init__(self, directory: str) -&gt; None:
+        Annotation.__init__(self, directory)
+
+    @overload
+    def __getitem__(self, item: int) -&gt; pd.DataFrame:
+        ...
+
+    @overload
+    def __getitem__(self, item: slice) -&gt; List[pd.DataFrame]:
+        ...
+
+    def __getitem__(self, item):
+        return super().__getitem__(item)
+
+    def _load_data_file(self, fp: str) -&gt; None:
+        return pd.read_pickle(fp)
+
+
+class SemanticSegmentation(Annotation):
+    &#34;&#34;&#34;Loads and provides Semantic Segmentation annotations. Subclass of ``Annotation``.
+
+    ``SemanticSegmentation`` loads files in `{sequence_id}/annotations/annotations/semseg/` containing semantic segmentation annotations for point clouds and class name mapping.
+
+    Args:
+         directory: Absolute or relative path where annotation files are stored
+
+    Attributes:
+        data: List of points and their class ID for each frame.
+        classes: Dict containing class ID to class name mapping.
+    &#34;&#34;&#34;
+
+    @property
+    def _data_file_extension(self) -&gt; str:
+        return &#39;pkl.gz&#39;
+
+    @property
+    def data(self) -&gt; List[pd.DataFrame]:
+        &#34;&#34;&#34;Returns annotation data array.
+
+        Returns:
+            List of semantic segmentation data frames. Each data frame has columns as follows:
+                - index: `int`
+                    - Index order corresponds to the order of point cloud in ``lidar`` property.
+                - `class`: `str`
+                    - Class ID as a number in string format. Can be used to find class name from ``classes`` property.
+        &#34;&#34;&#34;
+        return self._data
+
+    @property
+    def classes(self) -&gt; Dict[str, str]:
+        &#34;&#34;&#34;Returns class id to class name mapping.
+
+        Returns:
+            Dictionary with class ID as key and class name as value. Valid for the complete scene.
+        &#34;&#34;&#34;
+        return self._classes
+
+    def __init__(self, directory: str) -&gt; None:
+        self._classes_structure: str = None
+        self._classes: Dict[str, str] = None
+        Annotation.__init__(self, directory)
+
+    @overload
+    def __getitem__(self, item: int) -&gt; pd.DataFrame:
+        ...
+
+    @overload
+    def __getitem__(self, item: slice) -&gt; List[pd.DataFrame]:
+        ...
+
+    def __getitem__(self, item):
+        return super().__getitem__(item)
+
+    def load(self) -&gt; None:
+        super().load()
+        self._load_classes()
+
+    def _load_structure(self) -&gt; None:
+        super()._load_structure()
+        self._load_classes_structure()
+
+    def _load_classes_structure(self) -&gt; None:
+        classes_file = f&#39;{self._directory}/classes.json&#39;
+        if os.path.isfile(classes_file):
+            self._classes_structure = classes_file
+
+    def _load_data_file(self, fp: str) -&gt; None:
+        return pd.read_pickle(fp)
+
+    def _load_classes(self) -&gt; None:
+        with open(self._classes_structure, &#39;r&#39;) as f:
+            file_data = json.load(f)
+            self._classes = file_data
+
+
+if __name__ == &#39;__main__&#39;:
+    pass</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="pandaset.annotations.Annotation"><code class="flex name class">
+<span>class <span class="ident">Annotation</span></span>
+<span>(</span><span>directory: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Meta class inherited by subclasses for more specific annotation types.</p>
+<p><code><a title="pandaset.annotations.Annotation" href="#pandaset.annotations.Annotation">Annotation</a></code> provides generic preparation and loading methods for PandaSet folder structures. Subclasses
+for specific annotation styles must implement certain methods, as well as can override existing ones for extension.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>directory</code></strong></dt>
+<dd>Absolute or relative path where annotation files are stored</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>data</code></strong></dt>
+<dd>List of annotation data objects. The type of list elements depends on the subclass implementation of protected method <code>_load_data_file</code></dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Annotation:
+    &#34;&#34;&#34;Meta class inherited by subclasses for more specific annotation types.
+
+    ``Annotation`` provides generic preparation and loading methods for PandaSet folder structures. Subclasses
+    for specific annotation styles must implement certain methods, as well as can override existing ones for extension.
+
+    Args:
+         directory: Absolute or relative path where annotation files are stored
+
+    Attributes:
+        data: List of annotation data objects. The type of list elements depends on the subclass implementation of protected method ``_load_data_file``
+    &#34;&#34;&#34;
+    __metaclass__ = ABCMeta
+
+    @property
+    @abstractmethod
+    def _data_file_extension(self) -&gt; str:
+        ...
+
+    @property
+    def data(self) -&gt; List[T]:
+        &#34;&#34;&#34;Returns annotation data array.
+
+        Subclasses can use any type inside array.
+        &#34;&#34;&#34;
+        return self._data
+
+    def __init__(self, directory: str) -&gt; None:
+        self._directory: str = directory
+        self._data_structure: List[str] = None
+        self._data: List[T] = None
+        self._load_structure()
+
+    @overload
+    def __getitem__(self, item: int) -&gt; T:
+        ...
+
+    @overload
+    def __getitem__(self, item: slice) -&gt; List[T]:
+        ...
+
+    def __getitem__(self, item):
+        return self.data[item]
+
+    def _load_structure(self) -&gt; None:
+        self._load_data_structure()
+
+    def _load_data_structure(self) -&gt; None:
+        self._data_structure = sorted(
+            glob.glob(f&#39;{self._directory}/*.{self._data_file_extension}&#39;))
+
+    def load(self) -&gt; None:
+        &#34;&#34;&#34;Loads all annotation files from disk into memory.
+
+        All annotation files are loaded into memory in filename order.
+        &#34;&#34;&#34;
+        self._load_data()
+
+    def _load_data(self) -&gt; None:
+        self._data = []
+        for fp in self._data_structure:
+            self._data.append(self._load_data_file(fp))
+
+    @abstractmethod
+    def _load_data_file(self, fp: str) -&gt; None:
+        ...</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="pandaset.annotations.Cuboids" href="#pandaset.annotations.Cuboids">Cuboids</a></li>
+<li><a title="pandaset.annotations.SemanticSegmentation" href="#pandaset.annotations.SemanticSegmentation">SemanticSegmentation</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="pandaset.annotations.Annotation.data"><code class="name">var <span class="ident">data</span> : List[~T]</code></dt>
+<dd>
+<div class="desc"><p>Returns annotation data array.</p>
+<p>Subclasses can use any type inside array.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def data(self) -&gt; List[T]:
+    &#34;&#34;&#34;Returns annotation data array.
+
+    Subclasses can use any type inside array.
+    &#34;&#34;&#34;
+    return self._data</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="pandaset.annotations.Annotation.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>self) -> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Loads all annotation files from disk into memory.</p>
+<p>All annotation files are loaded into memory in filename order.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load(self) -&gt; None:
+    &#34;&#34;&#34;Loads all annotation files from disk into memory.
+
+    All annotation files are loaded into memory in filename order.
+    &#34;&#34;&#34;
+    self._load_data()</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="pandaset.annotations.Cuboids"><code class="flex name class">
+<span>class <span class="ident">Cuboids</span></span>
+<span>(</span><span>directory: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Loads and provides Cuboid annotations. Subclass of <code><a title="pandaset.annotations.Annotation" href="#pandaset.annotations.Annotation">Annotation</a></code>.</p>
+<p><code><a title="pandaset.annotations.Cuboids" href="#pandaset.annotations.Cuboids">Cuboids</a></code> loads files in <code>{sequence_id}/annotations/annotations/cuboids/</code> containing cuboid annotations.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>directory</code></strong></dt>
+<dd>Absolute or relative path where annotation files are stored</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>data</code></strong></dt>
+<dd>List of cuboids for each frame of scene.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Cuboids(Annotation):
+    &#34;&#34;&#34;Loads and provides Cuboid annotations. Subclass of ``Annotation``.
+
+    ``Cuboids`` loads files in `{sequence_id}/annotations/annotations/cuboids/` containing cuboid annotations.
+
+    Args:
+         directory: Absolute or relative path where annotation files are stored
+
+    Attributes:
+        data: List of cuboids for each frame of scene.
+    &#34;&#34;&#34;
+
+    @property
+    def _data_file_extension(self) -&gt; str:
+        return &#39;pkl.gz&#39;
+
+    @property
+    def data(self) -&gt; List[pd.DataFrame]:
+        &#34;&#34;&#34;Returns annotation data array.
+
+        Returns:
+            List of cuboid data frames. Each data frame has columns as follows:
+                - index: `int`
+                    - Each row corresponds to one cuboid. The index order is arbitrary.
+                - `uuid`: `str
+                    - Unique identifier for an object. If object is tracked within the sequence, the `uuid` stays the same on every frame.
+                - `label`: `str`
+                    - Contains name of object class associated with drawn cuboid.
+                - `yaw`: `str`
+                    - Rotation of cuboid around the z-axis. Given in _radians_ from which the cuboid is rotated along the z-axis. 0 radians is equivalent to the direction of the vector `(0, 1, 0)`. The vector points at the length-side. Rotation happens counter-clockwise, i.e., PI/2 is pointing in the same direction as the vector `(-1, 0, 0)`.
+                - `stationary`: `bool`
+                    - `True` if object is stationary in the whole scene, e.g., a parked car or traffic light. Otherwise `False`.
+                - `camera_used`: `int`
+                    - Reference to the camera which was used to validate cuboid position in projection. If no camera was explicitly used, value is set to `-1`.
+                - `position.x`: `float`
+                    - Position of the cuboid expressed as the center of the cuboid. Value is in world-coordinate system.
+                - `position.y`: `float`
+                    - Position of the cuboid expressed as the center of the cuboid. Value is in world-coordinate system.
+                - `position.z`: `float`
+                    - Position of the cuboid expressed as the center of the cuboid. Value is in world-coordinate system.
+                - `dimensions.x`: `float`
+                    - The dimensions of the cuboid based on the world dimensions. Width of the cuboid from left to right.
+                - `dimensions.y`: `float`
+                    - The dimensions of the cuboid based on the world dimensions. Length of the cuboid from front to back.
+                - `dimensions.z`: `float`
+                    - The dimensions of the cuboid based on the world dimensions. Height of the cuboid from top to bottom.
+                - `attributes.object_motion`: `str`
+                    - Values are `Parked`, `Stopped` or `Moving`.
+                    - Set for cuboids with `label` values in
+                        - _Car_
+                        - _Pickup Truck_
+                        - _Medium-sized Truck_
+                        - _Semi-truck_
+                        - _Towed Object_
+                        - _Motorcycle_
+                        - _Other Vehicle - Construction Vehicle_
+                        - _Other Vehicle - Uncommon_
+                        - _Other Vehicle - Pedicab_
+                        - _Emergency Vehicle_
+                        - _Bus_
+                        - _Personal Mobility Device_
+                        - _Motorized Scooter_
+                        - _Bicycle_
+                        - _Train_
+                        - _Trolley_
+                        - _Tram / Subway_
+                - `attributes.rider_status`: `str`
+                    - Values are `With Rider` or `Without Rider`.
+                    - Set for cuboids with `label` values in
+                        - _Motorcycle_
+                        - _Personal Mobility Device_
+                        - _Motorized Scooter_
+                        - _Bicycle_
+                        - _Animals - Other_
+                - `attributes.pedestrian_behavior`: `str`
+                    - Value are `Sitting`, `Lying`, `Walking` or `Standing`
+                    - Set for cuboids with `label` values in
+                        - _Pedestrian_
+                        - _Pedestrian with Object_
+                - `attributes.pedestrian_age`: `str`
+                    - Value are `Adult` or `Child` (less than ~18 years old)
+                    - Set for cuboids with `label` values in
+                        - _Pedestrian_
+                        - _Pedestrian with Object_
+                - `cuboids.sensor_id`: `int`
+                    - For the overlap area between mechanical 360° LiDAR and front-facing LiDAR, moving objects received two cuboids to compensate for synchronization differences of both sensors. If cuboid is in this overlapping area and moving, this value is either `0` (mechanical 360° LiDAR) or `1` (front-facing LiDAR). All other cuboids have value `-1`.
+                - `cuboids.sibling_id`: `str`
+                    - For cuboids which have `cuboids.sensor_id` set to `0` or `1`: this field stores the `uuid` of the sibling cuboid, i.e., measuring the same object in the overlap region, but with the other respective sensor.
+
+        &#34;&#34;&#34;
+        return self._data
+
+    def __init__(self, directory: str) -&gt; None:
+        Annotation.__init__(self, directory)
+
+    @overload
+    def __getitem__(self, item: int) -&gt; pd.DataFrame:
+        ...
+
+    @overload
+    def __getitem__(self, item: slice) -&gt; List[pd.DataFrame]:
+        ...
+
+    def __getitem__(self, item):
+        return super().__getitem__(item)
+
+    def _load_data_file(self, fp: str) -&gt; None:
+        return pd.read_pickle(fp)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pandaset.annotations.Annotation" href="#pandaset.annotations.Annotation">Annotation</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="pandaset.annotations.Cuboids.data"><code class="name">var <span class="ident">data</span> : List[pandas.core.frame.DataFrame]</code></dt>
+<dd>
+<div class="desc"><p>Returns annotation data array.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List</code> of <code>cuboid data frames. Each data frame has columns as follows:</code></dt>
+<dd>
+<ul>
+<li>index: <code>int</code><ul>
+<li>Each row corresponds to one cuboid. The index order is arbitrary.</li>
+</ul>
+</li>
+<li><code>uuid</code>: `str<ul>
+<li>Unique identifier for an object. If object is tracked within the sequence, the <code>uuid</code> stays the same on every frame.</li>
+</ul>
+</li>
+<li><code>label</code>: <code>str</code><ul>
+<li>Contains name of object class associated with drawn cuboid.</li>
+</ul>
+</li>
+<li><code>yaw</code>: <code>str</code><ul>
+<li>Rotation of cuboid around the z-axis. Given in <em>radians</em> from which the cuboid is rotated along the z-axis. 0 radians is equivalent to the direction of the vector <code>(0, 1, 0)</code>. The vector points at the length-side. Rotation happens counter-clockwise, i.e., PI/2 is pointing in the same direction as the vector <code>(-1, 0, 0)</code>.</li>
+</ul>
+</li>
+<li><code>stationary</code>: <code>bool</code><ul>
+<li><code>True</code> if object is stationary in the whole scene, e.g., a parked car or traffic light. Otherwise <code>False</code>.</li>
+</ul>
+</li>
+<li><code>camera_used</code>: <code>int</code><ul>
+<li>Reference to the camera which was used to validate cuboid position in projection. If no camera was explicitly used, value is set to <code>-1</code>.</li>
+</ul>
+</li>
+<li><code>position.x</code>: <code>float</code><ul>
+<li>Position of the cuboid expressed as the center of the cuboid. Value is in world-coordinate system.</li>
+</ul>
+</li>
+<li><code>position.y</code>: <code>float</code><ul>
+<li>Position of the cuboid expressed as the center of the cuboid. Value is in world-coordinate system.</li>
+</ul>
+</li>
+<li><code>position.z</code>: <code>float</code><ul>
+<li>Position of the cuboid expressed as the center of the cuboid. Value is in world-coordinate system.</li>
+</ul>
+</li>
+<li><code>dimensions.x</code>: <code>float</code><ul>
+<li>The dimensions of the cuboid based on the world dimensions. Width of the cuboid from left to right.</li>
+</ul>
+</li>
+<li><code>dimensions.y</code>: <code>float</code><ul>
+<li>The dimensions of the cuboid based on the world dimensions. Length of the cuboid from front to back.</li>
+</ul>
+</li>
+<li><code>dimensions.z</code>: <code>float</code><ul>
+<li>The dimensions of the cuboid based on the world dimensions. Height of the cuboid from top to bottom.</li>
+</ul>
+</li>
+<li><code>attributes.object_motion</code>: <code>str</code><ul>
+<li>Values are <code>Parked</code>, <code>Stopped</code> or <code>Moving</code>.</li>
+<li>Set for cuboids with <code>label</code> values in<ul>
+<li><em>Car</em></li>
+<li><em>Pickup Truck</em></li>
+<li><em>Medium-sized Truck</em></li>
+<li><em>Semi-truck</em></li>
+<li><em>Towed Object</em></li>
+<li><em>Motorcycle</em></li>
+<li><em>Other Vehicle - Construction Vehicle</em></li>
+<li><em>Other Vehicle - Uncommon</em></li>
+<li><em>Other Vehicle - Pedicab</em></li>
+<li><em>Emergency Vehicle</em></li>
+<li><em>Bus</em></li>
+<li><em>Personal Mobility Device</em></li>
+<li><em>Motorized Scooter</em></li>
+<li><em>Bicycle</em></li>
+<li><em>Train</em></li>
+<li><em>Trolley</em></li>
+<li><em>Tram / Subway</em></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>attributes.rider_status</code>: <code>str</code><ul>
+<li>Values are <code>With Rider</code> or <code>Without Rider</code>.</li>
+<li>Set for cuboids with <code>label</code> values in<ul>
+<li><em>Motorcycle</em></li>
+<li><em>Personal Mobility Device</em></li>
+<li><em>Motorized Scooter</em></li>
+<li><em>Bicycle</em></li>
+<li><em>Animals - Other</em></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>attributes.pedestrian_behavior</code>: <code>str</code><ul>
+<li>Value are <code>Sitting</code>, <code>Lying</code>, <code>Walking</code> or <code>Standing</code></li>
+<li>Set for cuboids with <code>label</code> values in<ul>
+<li><em>Pedestrian</em></li>
+<li><em>Pedestrian with Object</em></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>attributes.pedestrian_age</code>: <code>str</code><ul>
+<li>Value are <code>Adult</code> or <code>Child</code> (less than ~18 years old)</li>
+<li>Set for cuboids with <code>label</code> values in<ul>
+<li><em>Pedestrian</em></li>
+<li><em>Pedestrian with Object</em></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>cuboids.sensor_id</code>: <code>int</code><ul>
+<li>For the overlap area between mechanical 360° LiDAR and front-facing LiDAR, moving objects received two cuboids to compensate for synchronization differences of both sensors. If cuboid is in this overlapping area and moving, this value is either <code>0</code> (mechanical 360° LiDAR) or <code>1</code> (front-facing LiDAR). All other cuboids have value <code>-1</code>.</li>
+</ul>
+</li>
+<li><code>cuboids.sibling_id</code>: <code>str</code><ul>
+<li>For cuboids which have <code>cuboids.sensor_id</code> set to <code>0</code> or <code>1</code>: this field stores the <code>uuid</code> of the sibling cuboid, i.e., measuring the same object in the overlap region, but with the other respective sensor.</li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def data(self) -&gt; List[pd.DataFrame]:
+    &#34;&#34;&#34;Returns annotation data array.
+
+    Returns:
+        List of cuboid data frames. Each data frame has columns as follows:
+            - index: `int`
+                - Each row corresponds to one cuboid. The index order is arbitrary.
+            - `uuid`: `str
+                - Unique identifier for an object. If object is tracked within the sequence, the `uuid` stays the same on every frame.
+            - `label`: `str`
+                - Contains name of object class associated with drawn cuboid.
+            - `yaw`: `str`
+                - Rotation of cuboid around the z-axis. Given in _radians_ from which the cuboid is rotated along the z-axis. 0 radians is equivalent to the direction of the vector `(0, 1, 0)`. The vector points at the length-side. Rotation happens counter-clockwise, i.e., PI/2 is pointing in the same direction as the vector `(-1, 0, 0)`.
+            - `stationary`: `bool`
+                - `True` if object is stationary in the whole scene, e.g., a parked car or traffic light. Otherwise `False`.
+            - `camera_used`: `int`
+                - Reference to the camera which was used to validate cuboid position in projection. If no camera was explicitly used, value is set to `-1`.
+            - `position.x`: `float`
+                - Position of the cuboid expressed as the center of the cuboid. Value is in world-coordinate system.
+            - `position.y`: `float`
+                - Position of the cuboid expressed as the center of the cuboid. Value is in world-coordinate system.
+            - `position.z`: `float`
+                - Position of the cuboid expressed as the center of the cuboid. Value is in world-coordinate system.
+            - `dimensions.x`: `float`
+                - The dimensions of the cuboid based on the world dimensions. Width of the cuboid from left to right.
+            - `dimensions.y`: `float`
+                - The dimensions of the cuboid based on the world dimensions. Length of the cuboid from front to back.
+            - `dimensions.z`: `float`
+                - The dimensions of the cuboid based on the world dimensions. Height of the cuboid from top to bottom.
+            - `attributes.object_motion`: `str`
+                - Values are `Parked`, `Stopped` or `Moving`.
+                - Set for cuboids with `label` values in
+                    - _Car_
+                    - _Pickup Truck_
+                    - _Medium-sized Truck_
+                    - _Semi-truck_
+                    - _Towed Object_
+                    - _Motorcycle_
+                    - _Other Vehicle - Construction Vehicle_
+                    - _Other Vehicle - Uncommon_
+                    - _Other Vehicle - Pedicab_
+                    - _Emergency Vehicle_
+                    - _Bus_
+                    - _Personal Mobility Device_
+                    - _Motorized Scooter_
+                    - _Bicycle_
+                    - _Train_
+                    - _Trolley_
+                    - _Tram / Subway_
+            - `attributes.rider_status`: `str`
+                - Values are `With Rider` or `Without Rider`.
+                - Set for cuboids with `label` values in
+                    - _Motorcycle_
+                    - _Personal Mobility Device_
+                    - _Motorized Scooter_
+                    - _Bicycle_
+                    - _Animals - Other_
+            - `attributes.pedestrian_behavior`: `str`
+                - Value are `Sitting`, `Lying`, `Walking` or `Standing`
+                - Set for cuboids with `label` values in
+                    - _Pedestrian_
+                    - _Pedestrian with Object_
+            - `attributes.pedestrian_age`: `str`
+                - Value are `Adult` or `Child` (less than ~18 years old)
+                - Set for cuboids with `label` values in
+                    - _Pedestrian_
+                    - _Pedestrian with Object_
+            - `cuboids.sensor_id`: `int`
+                - For the overlap area between mechanical 360° LiDAR and front-facing LiDAR, moving objects received two cuboids to compensate for synchronization differences of both sensors. If cuboid is in this overlapping area and moving, this value is either `0` (mechanical 360° LiDAR) or `1` (front-facing LiDAR). All other cuboids have value `-1`.
+            - `cuboids.sibling_id`: `str`
+                - For cuboids which have `cuboids.sensor_id` set to `0` or `1`: this field stores the `uuid` of the sibling cuboid, i.e., measuring the same object in the overlap region, but with the other respective sensor.
+
+    &#34;&#34;&#34;
+    return self._data</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="pandaset.annotations.Annotation" href="#pandaset.annotations.Annotation">Annotation</a></b></code>:
+<ul class="hlist">
+<li><code><a title="pandaset.annotations.Annotation.load" href="#pandaset.annotations.Annotation.load">load</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="pandaset.annotations.SemanticSegmentation"><code class="flex name class">
+<span>class <span class="ident">SemanticSegmentation</span></span>
+<span>(</span><span>directory: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Loads and provides Semantic Segmentation annotations. Subclass of <code><a title="pandaset.annotations.Annotation" href="#pandaset.annotations.Annotation">Annotation</a></code>.</p>
+<p><code><a title="pandaset.annotations.SemanticSegmentation" href="#pandaset.annotations.SemanticSegmentation">SemanticSegmentation</a></code> loads files in <code>{sequence_id}/annotations/annotations/semseg/</code> containing semantic segmentation annotations for point clouds and class name mapping.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>directory</code></strong></dt>
+<dd>Absolute or relative path where annotation files are stored</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>data</code></strong></dt>
+<dd>List of points and their class ID for each frame.</dd>
+<dt><strong><code>classes</code></strong></dt>
+<dd>Dict containing class ID to class name mapping.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SemanticSegmentation(Annotation):
+    &#34;&#34;&#34;Loads and provides Semantic Segmentation annotations. Subclass of ``Annotation``.
+
+    ``SemanticSegmentation`` loads files in `{sequence_id}/annotations/annotations/semseg/` containing semantic segmentation annotations for point clouds and class name mapping.
+
+    Args:
+         directory: Absolute or relative path where annotation files are stored
+
+    Attributes:
+        data: List of points and their class ID for each frame.
+        classes: Dict containing class ID to class name mapping.
+    &#34;&#34;&#34;
+
+    @property
+    def _data_file_extension(self) -&gt; str:
+        return &#39;pkl.gz&#39;
+
+    @property
+    def data(self) -&gt; List[pd.DataFrame]:
+        &#34;&#34;&#34;Returns annotation data array.
+
+        Returns:
+            List of semantic segmentation data frames. Each data frame has columns as follows:
+                - index: `int`
+                    - Index order corresponds to the order of point cloud in ``lidar`` property.
+                - `class`: `str`
+                    - Class ID as a number in string format. Can be used to find class name from ``classes`` property.
+        &#34;&#34;&#34;
+        return self._data
+
+    @property
+    def classes(self) -&gt; Dict[str, str]:
+        &#34;&#34;&#34;Returns class id to class name mapping.
+
+        Returns:
+            Dictionary with class ID as key and class name as value. Valid for the complete scene.
+        &#34;&#34;&#34;
+        return self._classes
+
+    def __init__(self, directory: str) -&gt; None:
+        self._classes_structure: str = None
+        self._classes: Dict[str, str] = None
+        Annotation.__init__(self, directory)
+
+    @overload
+    def __getitem__(self, item: int) -&gt; pd.DataFrame:
+        ...
+
+    @overload
+    def __getitem__(self, item: slice) -&gt; List[pd.DataFrame]:
+        ...
+
+    def __getitem__(self, item):
+        return super().__getitem__(item)
+
+    def load(self) -&gt; None:
+        super().load()
+        self._load_classes()
+
+    def _load_structure(self) -&gt; None:
+        super()._load_structure()
+        self._load_classes_structure()
+
+    def _load_classes_structure(self) -&gt; None:
+        classes_file = f&#39;{self._directory}/classes.json&#39;
+        if os.path.isfile(classes_file):
+            self._classes_structure = classes_file
+
+    def _load_data_file(self, fp: str) -&gt; None:
+        return pd.read_pickle(fp)
+
+    def _load_classes(self) -&gt; None:
+        with open(self._classes_structure, &#39;r&#39;) as f:
+            file_data = json.load(f)
+            self._classes = file_data</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pandaset.annotations.Annotation" href="#pandaset.annotations.Annotation">Annotation</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="pandaset.annotations.SemanticSegmentation.classes"><code class="name">var <span class="ident">classes</span> : Dict[str, str]</code></dt>
+<dd>
+<div class="desc"><p>Returns class id to class name mapping.</p>
+<h2 id="returns">Returns</h2>
+<p>Dictionary with class ID as key and class name as value. Valid for the complete scene.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def classes(self) -&gt; Dict[str, str]:
+    &#34;&#34;&#34;Returns class id to class name mapping.
+
+    Returns:
+        Dictionary with class ID as key and class name as value. Valid for the complete scene.
+    &#34;&#34;&#34;
+    return self._classes</code></pre>
+</details>
+</dd>
+<dt id="pandaset.annotations.SemanticSegmentation.data"><code class="name">var <span class="ident">data</span> : List[pandas.core.frame.DataFrame]</code></dt>
+<dd>
+<div class="desc"><p>Returns annotation data array.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List</code> of <code>semantic segmentation data frames. Each data frame has columns as follows:</code></dt>
+<dd>
+<ul>
+<li>index: <code>int</code><ul>
+<li>Index order corresponds to the order of point cloud in <code>lidar</code> property.</li>
+</ul>
+</li>
+<li><code>class</code>: <code>str</code><ul>
+<li>Class ID as a number in string format. Can be used to find class name from <code>classes</code> property.</li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def data(self) -&gt; List[pd.DataFrame]:
+    &#34;&#34;&#34;Returns annotation data array.
+
+    Returns:
+        List of semantic segmentation data frames. Each data frame has columns as follows:
+            - index: `int`
+                - Index order corresponds to the order of point cloud in ``lidar`` property.
+            - `class`: `str`
+                - Class ID as a number in string format. Can be used to find class name from ``classes`` property.
+    &#34;&#34;&#34;
+    return self._data</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="pandaset.annotations.Annotation" href="#pandaset.annotations.Annotation">Annotation</a></b></code>:
+<ul class="hlist">
+<li><code><a title="pandaset.annotations.Annotation.load" href="#pandaset.annotations.Annotation.load">load</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="pandaset" href="index.html">pandaset</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="pandaset.annotations.Annotation" href="#pandaset.annotations.Annotation">Annotation</a></code></h4>
+<ul class="">
+<li><code><a title="pandaset.annotations.Annotation.data" href="#pandaset.annotations.Annotation.data">data</a></code></li>
+<li><code><a title="pandaset.annotations.Annotation.load" href="#pandaset.annotations.Annotation.load">load</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="pandaset.annotations.Cuboids" href="#pandaset.annotations.Cuboids">Cuboids</a></code></h4>
+<ul class="">
+<li><code><a title="pandaset.annotations.Cuboids.data" href="#pandaset.annotations.Cuboids.data">data</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="pandaset.annotations.SemanticSegmentation" href="#pandaset.annotations.SemanticSegmentation">SemanticSegmentation</a></code></h4>
+<ul class="">
+<li><code><a title="pandaset.annotations.SemanticSegmentation.classes" href="#pandaset.annotations.SemanticSegmentation.classes">classes</a></code></li>
+<li><code><a title="pandaset.annotations.SemanticSegmentation.data" href="#pandaset.annotations.SemanticSegmentation.data">data</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

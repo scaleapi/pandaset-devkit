@@ -1,0 +1,1326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>pandaset.sensors API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>pandaset.sensors</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">#!/usr/bin/env python3
+import glob
+import json
+import os.path
+from typing import List, overload, TypeVar, Dict
+from abc import ABCMeta, abstractmethod
+
+import pandas as pd
+from PIL import Image
+from PIL.JpegImagePlugin import JpegImageFile
+from pandas.core.frame import DataFrame
+
+T = TypeVar(&#39;T&#39;)
+
+
+class Sensor:
+    __metaclass__ = ABCMeta
+
+    @property
+    @abstractmethod
+    def _data_file_extension(self) -&gt; str:
+        ...
+
+    @property
+    def data(self) -&gt; List[T]:
+        &#34;&#34;&#34;Returns sensor data array.
+
+        Subclasses can use any type inside array.
+        &#34;&#34;&#34;
+        return self._data
+
+    @property
+    def poses(self) -&gt; List[T]:
+        &#34;&#34;&#34;Returns sensor pose array.
+
+        Subclasses can use any type inside array.
+        &#34;&#34;&#34;
+        return self._data
+
+    @property
+    def timestamps(self) -&gt; List[T]:
+        &#34;&#34;&#34;Returns sensor timestamp array.
+
+        Subclasses can use any type inside array.
+        &#34;&#34;&#34;
+        return self._data
+
+    def __init__(self, directory: str) -&gt; None:
+        self._directory: str = directory
+        self._data_structure: List[str] = None
+        self._data: List[T] = None
+        self._poses_structure: str = None
+        self._poses: List[Dict[str, T]] = None
+        self._timestamps_structure: str = None
+        self._timestamps: List[float] = None
+        self._load_structure()
+
+    @overload
+    def __getitem__(self, item: int) -&gt; T:
+        ...
+
+    @overload
+    def __getitem__(self, item: slice) -&gt; List[T]:
+        ...
+
+    def __getitem__(self, item):
+        return self._data[item]
+
+    def _load_structure(self) -&gt; None:
+        self._load_data_structure()
+        self._load_poses_structure()
+        self._load_timestamps_structure()
+
+    def _load_data_structure(self) -&gt; None:
+        self._data_structure = sorted(
+            glob.glob(f&#39;{self._directory}/*.{self._data_file_extension}&#39;))
+
+    def _load_poses_structure(self) -&gt; None:
+        poses_file = f&#39;{self._directory}/poses.json&#39;
+        if os.path.isfile(poses_file):
+            self._poses_structure = poses_file
+
+    def _load_timestamps_structure(self) -&gt; None:
+        timestamps_file = f&#39;{self._directory}/timestamps.json&#39;
+        if os.path.isfile(timestamps_file):
+            self._timestamps_structure = timestamps_file
+
+    def load(self) -&gt; None:
+        &#34;&#34;&#34;Loads all sensor files from disk into memory.
+
+        All sensor and associated meta data files are loaded into memory in filename order.
+        &#34;&#34;&#34;
+        self._load_data()
+        self._load_poses()
+        self._load_timestamps()
+
+    def _load_data(self) -&gt; None:
+        self._data = []
+        for fp in self._data_structure:
+            self._data.append(self._load_data_file(fp))
+
+    def _load_poses(self) -&gt; None:
+        self._poses = []
+        with open(self._poses_structure, &#39;r&#39;) as f:
+            file_data = json.load(f)
+            for entry in file_data:
+                self._poses.append(entry)
+
+    def _load_timestamps(self) -&gt; None:
+        self._timestamps = []
+        with open(self._timestamps_structure, &#39;r&#39;) as f:
+            file_data = json.load(f)
+            for entry in file_data:
+                self._timestamps.append(entry)
+
+    @abstractmethod
+    def _load_data_file(self, fp: str) -&gt; None:
+        ...
+
+
+class Lidar(Sensor):
+    @property
+    def _data_file_extension(self) -&gt; str:
+        return &#39;pkl.gz&#39;
+
+    @property
+    def data(self) -&gt; List[pd.DataFrame]:
+        &#34;&#34;&#34;Returns LiDAR point cloud array.
+
+        Point cloud data is in a world-coordinate system, i.e., a static object which is a position `(10,10,0)` in frame 1, will be at position `(10,10,0)` in all other frames, too.
+
+        Returns:
+            List of point cloud data frames for each timestamp. Each data frame has columns as follows:
+                - index: `int`
+                    - Ordered point cloud. When joining the raw point cloud with data from ``SemanticSegmentation``, it is important to keep the index order.
+                - `x`: `float`
+                    - Position of point in world-coordinate system (x-axis) in meter
+                - `y`: `float`
+                    - Position of point in world-coordinate system (y-axis) in meter
+                - `z`: `float`
+                    - Position of point in world-coordinate system (z-axis) in meter
+                - `i`: `float`
+                    - Reflection intensity in a range `[0,255]`
+                - `t`: `float`
+                    - Recorded timestamp for specific point
+                - `d`: `int`
+                    - Sensor ID. `0` -&gt; mechnical 360° LiDAR, `1` -&gt; forward-facing LiDAR
+        &#34;&#34;&#34;
+        return self._data
+
+    @property
+    def poses(self) -&gt; List[Dict[str, Dict[str, float]]]:
+        &#34;&#34;&#34;Returns LiDAR sensor pose array.
+
+        Returns:
+            A pose dictionary of the LiDAR sensor in world-coordinates for each frame. The dictionary keys return the following types:
+             - `position`: `dict`
+                - `x`: `float`
+                    - Position of LiDAR sensor in world-coordinate system (x-axis) in meter
+                - `y`: `float`
+                    - Position of LiDAR sensor in world-coordinate system (y-axis) in meter
+                - `z`: `float`
+                    - Position of LiDAR sensor in world-coordinate system (z-axis) in meter
+            - `heading`: `dict`
+                - `w`: `float`
+                    - Real part of _Quaternion_
+                - `x`: `float`
+                    - First imaginary part of _Quaternion_
+                - `y`: `float`
+                    - Second imaginary part of _Quaternion_
+                - `z`: `float`
+                    - Third imaginary part of _Quaternion_
+        &#34;&#34;&#34;
+        return self._poses
+
+    @property
+    def timestamps(self) -&gt; List[float]:
+        &#34;&#34;&#34;Returns LiDAR sensor recording timestamps array.
+
+        Returns:
+            A list of timestamps in `float` format for each point cloud recorded in this sequence. To get point-wise timestamps, please refer to column `t` in `data` property return values.
+        &#34;&#34;&#34;
+        return self._timestamps
+
+    def __init__(self, directory: str) -&gt; None:
+        Sensor.__init__(self, directory)
+
+    @overload
+    def __getitem__(self, item: int) -&gt; DataFrame:
+        ...
+
+    @overload
+    def __getitem__(self, item: slice) -&gt; List[DataFrame]:
+        ...
+
+    def __getitem__(self, item):
+        return super().__getitem__(item)
+
+    def _load_data_file(self, fp: str) -&gt; DataFrame:
+        return pd.read_pickle(fp)
+
+
+class Camera(Sensor):
+    @property
+    def _data_file_extension(self) -&gt; str:
+        return &#39;jpg&#39;
+
+    @property
+    def data(self) -&gt; List[JpegImageFile]:
+        &#34;&#34;&#34;Returns Camera image array.
+
+        Returns:
+            List of camera images for each timestamp. Camera images are loaded as [``JpegImageFile``](https://pillow.readthedocs.io/en/stable/reference/plugins.html#PIL.JpegImagePlugin.JpegImageFile).
+        &#34;&#34;&#34;
+        return self._data
+
+    @property
+    def poses(self) -&gt; List[Dict[str, Dict[str, float]]]:
+        &#34;&#34;&#34;Returns Camera sensor pose array.
+
+        Returns:
+            A pose dictionary of the Camera sensor in world-coordinates for each frame. The dictionary keys return the following types:
+             - `position`: `dict`
+                - `x`: `float`
+                    - Position of LiDAR sensor in world-coordinate system (x-axis) in meter
+                - `y`: `float`
+                    - Position of LiDAR sensor in world-coordinate system (y-axis) in meter
+                - `z`: `float`
+                    - Position of LiDAR sensor in world-coordinate system (z-axis) in meter
+            - `heading`: `dict`
+                - `w`: `float`
+                    - Real part of _Quaternion_
+                - `x`: `float`
+                    - First imaginary part of _Quaternion_
+                - `y`: `float`
+                    - Second imaginary part of _Quaternion_
+                - `z`: `float`
+                    - Third imaginary part of _Quaternion_
+        &#34;&#34;&#34;
+        return self._poses
+
+    @property
+    def timestamps(self) -&gt; List[float]:
+        &#34;&#34;&#34;Returns Camera sensor recording timestamps array.
+
+        Returns:
+            A list of timestamps in `float` format for each camera image recorded in this sequence. To get point-wise timestamps, please refer to column `t` in `data` property return values.
+        &#34;&#34;&#34;
+        return self._timestamps
+
+    @property
+    def intrinsics(self) -&gt; &#39;Intrinsics&#39;:
+        &#34;&#34;&#34;Camera specific intrinsic data.
+
+        Returns:
+            Instance of class ``Intrinsics``
+        &#34;&#34;&#34;
+        return self._intrinsics
+
+    def __init__(self, directory: str) -&gt; None:
+        self._intrinsics_structure: str = None
+        self._intrinsics: Intrinsics = None
+        Sensor.__init__(self, directory)
+
+    @overload
+    def __getitem__(self, item: int) -&gt; JpegImageFile:
+        ...
+
+    @overload
+    def __getitem__(self, item: slice) -&gt; List[JpegImageFile]:
+        ...
+
+    def __getitem__(self, item):
+        return super().__getitem__(item)
+
+    def load(self) -&gt; None:
+        super().load()
+        self._load_intrinsics()
+
+    def _load_structure(self) -&gt; None:
+        super()._load_structure()
+        self._load_intrinsics_structure()
+
+    def _load_intrinsics_structure(self) -&gt; None:
+        intrinsics_file = f&#39;{self._directory}/intrinsics.json&#39;
+        if os.path.isfile(intrinsics_file):
+            self._intrinsics_structure = intrinsics_file
+
+    def _load_data_file(self, fp: str) -&gt; JpegImageFile:
+        return Image.open(fp)
+
+    def _load_intrinsics(self) -&gt; None:
+        with open(self._intrinsics_structure, &#39;r&#39;) as f:
+            file_data = json.load(f)
+            self._intrinsics = Intrinsics(fx=file_data[&#39;fx&#39;],
+                                          fy=file_data[&#39;fy&#39;],
+                                          cx=file_data[&#39;cx&#39;],
+                                          cy=file_data[&#39;cy&#39;])
+
+
+class Intrinsics:
+    &#34;&#34;&#34;Camera intrinsics
+
+    Contains camera intrinsics with properties `fx`, `fy`, `cx`, `cy`, for easy usage with [OpenCV framework](https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html).
+    There is no `skew` factor in the camera recordings.
+    &#34;&#34;&#34;
+
+    @property
+    def fx(self) -&gt; float:
+        &#34;&#34;&#34;Focal length x-axis
+
+        Returns:
+            Focal length x-axis component
+        &#34;&#34;&#34;
+        return self._fx
+
+    @property
+    def fy(self) -&gt; float:
+        &#34;&#34;&#34;Focal length y-axis
+
+        Returns:
+            Focal length y-axis component
+        &#34;&#34;&#34;
+        return self._fy
+
+    @property
+    def cx(self) -&gt; float:
+        &#34;&#34;&#34;Principal point x-axis
+
+        Returns:
+            Principal point x-axis component
+        &#34;&#34;&#34;
+        return self._cx
+
+    @property
+    def cy(self) -&gt; float:
+        &#34;&#34;&#34;Principal point y-axis
+
+        Returns:
+            Principal point y-axis component
+        &#34;&#34;&#34;
+        return self._cy
+
+    def __init__(self, fx: float, fy: float, cx: float, cy: float):
+        self._fx: float = fx
+        self._fy: float = fy
+        self._cx: float = cx
+        self._cy: float = cy
+
+
+if __name__ == &#39;__main__&#39;:
+    pass</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="pandaset.sensors.Camera"><code class="flex name class">
+<span>class <span class="ident">Camera</span></span>
+<span>(</span><span>directory: str)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Camera(Sensor):
+    @property
+    def _data_file_extension(self) -&gt; str:
+        return &#39;jpg&#39;
+
+    @property
+    def data(self) -&gt; List[JpegImageFile]:
+        &#34;&#34;&#34;Returns Camera image array.
+
+        Returns:
+            List of camera images for each timestamp. Camera images are loaded as [``JpegImageFile``](https://pillow.readthedocs.io/en/stable/reference/plugins.html#PIL.JpegImagePlugin.JpegImageFile).
+        &#34;&#34;&#34;
+        return self._data
+
+    @property
+    def poses(self) -&gt; List[Dict[str, Dict[str, float]]]:
+        &#34;&#34;&#34;Returns Camera sensor pose array.
+
+        Returns:
+            A pose dictionary of the Camera sensor in world-coordinates for each frame. The dictionary keys return the following types:
+             - `position`: `dict`
+                - `x`: `float`
+                    - Position of LiDAR sensor in world-coordinate system (x-axis) in meter
+                - `y`: `float`
+                    - Position of LiDAR sensor in world-coordinate system (y-axis) in meter
+                - `z`: `float`
+                    - Position of LiDAR sensor in world-coordinate system (z-axis) in meter
+            - `heading`: `dict`
+                - `w`: `float`
+                    - Real part of _Quaternion_
+                - `x`: `float`
+                    - First imaginary part of _Quaternion_
+                - `y`: `float`
+                    - Second imaginary part of _Quaternion_
+                - `z`: `float`
+                    - Third imaginary part of _Quaternion_
+        &#34;&#34;&#34;
+        return self._poses
+
+    @property
+    def timestamps(self) -&gt; List[float]:
+        &#34;&#34;&#34;Returns Camera sensor recording timestamps array.
+
+        Returns:
+            A list of timestamps in `float` format for each camera image recorded in this sequence. To get point-wise timestamps, please refer to column `t` in `data` property return values.
+        &#34;&#34;&#34;
+        return self._timestamps
+
+    @property
+    def intrinsics(self) -&gt; &#39;Intrinsics&#39;:
+        &#34;&#34;&#34;Camera specific intrinsic data.
+
+        Returns:
+            Instance of class ``Intrinsics``
+        &#34;&#34;&#34;
+        return self._intrinsics
+
+    def __init__(self, directory: str) -&gt; None:
+        self._intrinsics_structure: str = None
+        self._intrinsics: Intrinsics = None
+        Sensor.__init__(self, directory)
+
+    @overload
+    def __getitem__(self, item: int) -&gt; JpegImageFile:
+        ...
+
+    @overload
+    def __getitem__(self, item: slice) -&gt; List[JpegImageFile]:
+        ...
+
+    def __getitem__(self, item):
+        return super().__getitem__(item)
+
+    def load(self) -&gt; None:
+        super().load()
+        self._load_intrinsics()
+
+    def _load_structure(self) -&gt; None:
+        super()._load_structure()
+        self._load_intrinsics_structure()
+
+    def _load_intrinsics_structure(self) -&gt; None:
+        intrinsics_file = f&#39;{self._directory}/intrinsics.json&#39;
+        if os.path.isfile(intrinsics_file):
+            self._intrinsics_structure = intrinsics_file
+
+    def _load_data_file(self, fp: str) -&gt; JpegImageFile:
+        return Image.open(fp)
+
+    def _load_intrinsics(self) -&gt; None:
+        with open(self._intrinsics_structure, &#39;r&#39;) as f:
+            file_data = json.load(f)
+            self._intrinsics = Intrinsics(fx=file_data[&#39;fx&#39;],
+                                          fy=file_data[&#39;fy&#39;],
+                                          cx=file_data[&#39;cx&#39;],
+                                          cy=file_data[&#39;cy&#39;])</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pandaset.sensors.Sensor" href="#pandaset.sensors.Sensor">Sensor</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="pandaset.sensors.Camera.data"><code class="name">var <span class="ident">data</span> : List[PIL.JpegImagePlugin.JpegImageFile]</code></dt>
+<dd>
+<div class="desc"><p>Returns Camera image array.</p>
+<h2 id="returns">Returns</h2>
+<p>List of camera images for each timestamp. Camera images are loaded as <a href="https://pillow.readthedocs.io/en/stable/reference/plugins.html#PIL.JpegImagePlugin.JpegImageFile"><code>JpegImageFile</code></a>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def data(self) -&gt; List[JpegImageFile]:
+    &#34;&#34;&#34;Returns Camera image array.
+
+    Returns:
+        List of camera images for each timestamp. Camera images are loaded as [``JpegImageFile``](https://pillow.readthedocs.io/en/stable/reference/plugins.html#PIL.JpegImagePlugin.JpegImageFile).
+    &#34;&#34;&#34;
+    return self._data</code></pre>
+</details>
+</dd>
+<dt id="pandaset.sensors.Camera.intrinsics"><code class="name">var <span class="ident">intrinsics</span> : <a title="pandaset.sensors.Intrinsics" href="#pandaset.sensors.Intrinsics">Intrinsics</a></code></dt>
+<dd>
+<div class="desc"><p>Camera specific intrinsic data.</p>
+<h2 id="returns">Returns</h2>
+<p>Instance of class <code><a title="pandaset.sensors.Intrinsics" href="#pandaset.sensors.Intrinsics">Intrinsics</a></code></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def intrinsics(self) -&gt; &#39;Intrinsics&#39;:
+    &#34;&#34;&#34;Camera specific intrinsic data.
+
+    Returns:
+        Instance of class ``Intrinsics``
+    &#34;&#34;&#34;
+    return self._intrinsics</code></pre>
+</details>
+</dd>
+<dt id="pandaset.sensors.Camera.poses"><code class="name">var <span class="ident">poses</span> : List[Dict[str, Dict[str, float]]]</code></dt>
+<dd>
+<div class="desc"><p>Returns Camera sensor pose array.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>A pose dictionary</code> of <code>the Camera sensor in world-coordinates for each frame. The dictionary keys return the following types:</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<ul>
+<li><code>position</code>: <code>dict</code><ul>
+<li><code>x</code>: <code>float</code><ul>
+<li>Position of LiDAR sensor in world-coordinate system (x-axis) in meter</li>
+</ul>
+</li>
+<li><code>y</code>: <code>float</code><ul>
+<li>Position of LiDAR sensor in world-coordinate system (y-axis) in meter</li>
+</ul>
+</li>
+<li><code>z</code>: <code>float</code><ul>
+<li>Position of LiDAR sensor in world-coordinate system (z-axis) in meter</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>heading</code>: <code>dict</code><ul>
+<li><code>w</code>: <code>float</code><ul>
+<li>Real part of <em>Quaternion</em></li>
+</ul>
+</li>
+<li><code>x</code>: <code>float</code><ul>
+<li>First imaginary part of <em>Quaternion</em></li>
+</ul>
+</li>
+<li><code>y</code>: <code>float</code><ul>
+<li>Second imaginary part of <em>Quaternion</em></li>
+</ul>
+</li>
+<li><code>z</code>: <code>float</code><ul>
+<li>Third imaginary part of <em>Quaternion</em></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def poses(self) -&gt; List[Dict[str, Dict[str, float]]]:
+    &#34;&#34;&#34;Returns Camera sensor pose array.
+
+    Returns:
+        A pose dictionary of the Camera sensor in world-coordinates for each frame. The dictionary keys return the following types:
+         - `position`: `dict`
+            - `x`: `float`
+                - Position of LiDAR sensor in world-coordinate system (x-axis) in meter
+            - `y`: `float`
+                - Position of LiDAR sensor in world-coordinate system (y-axis) in meter
+            - `z`: `float`
+                - Position of LiDAR sensor in world-coordinate system (z-axis) in meter
+        - `heading`: `dict`
+            - `w`: `float`
+                - Real part of _Quaternion_
+            - `x`: `float`
+                - First imaginary part of _Quaternion_
+            - `y`: `float`
+                - Second imaginary part of _Quaternion_
+            - `z`: `float`
+                - Third imaginary part of _Quaternion_
+    &#34;&#34;&#34;
+    return self._poses</code></pre>
+</details>
+</dd>
+<dt id="pandaset.sensors.Camera.timestamps"><code class="name">var <span class="ident">timestamps</span> : List[float]</code></dt>
+<dd>
+<div class="desc"><p>Returns Camera sensor recording timestamps array.</p>
+<h2 id="returns">Returns</h2>
+<p>A list of timestamps in <code>float</code> format for each camera image recorded in this sequence. To get point-wise timestamps, please refer to column <code>t</code> in <code>data</code> property return values.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def timestamps(self) -&gt; List[float]:
+    &#34;&#34;&#34;Returns Camera sensor recording timestamps array.
+
+    Returns:
+        A list of timestamps in `float` format for each camera image recorded in this sequence. To get point-wise timestamps, please refer to column `t` in `data` property return values.
+    &#34;&#34;&#34;
+    return self._timestamps</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="pandaset.sensors.Sensor" href="#pandaset.sensors.Sensor">Sensor</a></b></code>:
+<ul class="hlist">
+<li><code><a title="pandaset.sensors.Sensor.load" href="#pandaset.sensors.Sensor.load">load</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="pandaset.sensors.Intrinsics"><code class="flex name class">
+<span>class <span class="ident">Intrinsics</span></span>
+<span>(</span><span>fx: float, fy: float, cx: float, cy: float)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Camera intrinsics</p>
+<p>Contains camera intrinsics with properties <code>fx</code>, <code>fy</code>, <code>cx</code>, <code>cy</code>, for easy usage with <a href="https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html">OpenCV framework</a>.
+There is no <code>skew</code> factor in the camera recordings.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Intrinsics:
+    &#34;&#34;&#34;Camera intrinsics
+
+    Contains camera intrinsics with properties `fx`, `fy`, `cx`, `cy`, for easy usage with [OpenCV framework](https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html).
+    There is no `skew` factor in the camera recordings.
+    &#34;&#34;&#34;
+
+    @property
+    def fx(self) -&gt; float:
+        &#34;&#34;&#34;Focal length x-axis
+
+        Returns:
+            Focal length x-axis component
+        &#34;&#34;&#34;
+        return self._fx
+
+    @property
+    def fy(self) -&gt; float:
+        &#34;&#34;&#34;Focal length y-axis
+
+        Returns:
+            Focal length y-axis component
+        &#34;&#34;&#34;
+        return self._fy
+
+    @property
+    def cx(self) -&gt; float:
+        &#34;&#34;&#34;Principal point x-axis
+
+        Returns:
+            Principal point x-axis component
+        &#34;&#34;&#34;
+        return self._cx
+
+    @property
+    def cy(self) -&gt; float:
+        &#34;&#34;&#34;Principal point y-axis
+
+        Returns:
+            Principal point y-axis component
+        &#34;&#34;&#34;
+        return self._cy
+
+    def __init__(self, fx: float, fy: float, cx: float, cy: float):
+        self._fx: float = fx
+        self._fy: float = fy
+        self._cx: float = cx
+        self._cy: float = cy</code></pre>
+</details>
+<h3>Instance variables</h3>
+<dl>
+<dt id="pandaset.sensors.Intrinsics.cx"><code class="name">var <span class="ident">cx</span> : float</code></dt>
+<dd>
+<div class="desc"><p>Principal point x-axis</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Principal point x-axis component</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def cx(self) -&gt; float:
+    &#34;&#34;&#34;Principal point x-axis
+
+    Returns:
+        Principal point x-axis component
+    &#34;&#34;&#34;
+    return self._cx</code></pre>
+</details>
+</dd>
+<dt id="pandaset.sensors.Intrinsics.cy"><code class="name">var <span class="ident">cy</span> : float</code></dt>
+<dd>
+<div class="desc"><p>Principal point y-axis</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Principal point y-axis component</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def cy(self) -&gt; float:
+    &#34;&#34;&#34;Principal point y-axis
+
+    Returns:
+        Principal point y-axis component
+    &#34;&#34;&#34;
+    return self._cy</code></pre>
+</details>
+</dd>
+<dt id="pandaset.sensors.Intrinsics.fx"><code class="name">var <span class="ident">fx</span> : float</code></dt>
+<dd>
+<div class="desc"><p>Focal length x-axis</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Focal length x-axis component</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def fx(self) -&gt; float:
+    &#34;&#34;&#34;Focal length x-axis
+
+    Returns:
+        Focal length x-axis component
+    &#34;&#34;&#34;
+    return self._fx</code></pre>
+</details>
+</dd>
+<dt id="pandaset.sensors.Intrinsics.fy"><code class="name">var <span class="ident">fy</span> : float</code></dt>
+<dd>
+<div class="desc"><p>Focal length y-axis</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Focal length y-axis component</code></dt>
+<dd>&nbsp;</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def fy(self) -&gt; float:
+    &#34;&#34;&#34;Focal length y-axis
+
+    Returns:
+        Focal length y-axis component
+    &#34;&#34;&#34;
+    return self._fy</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="pandaset.sensors.Lidar"><code class="flex name class">
+<span>class <span class="ident">Lidar</span></span>
+<span>(</span><span>directory: str)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Lidar(Sensor):
+    @property
+    def _data_file_extension(self) -&gt; str:
+        return &#39;pkl.gz&#39;
+
+    @property
+    def data(self) -&gt; List[pd.DataFrame]:
+        &#34;&#34;&#34;Returns LiDAR point cloud array.
+
+        Point cloud data is in a world-coordinate system, i.e., a static object which is a position `(10,10,0)` in frame 1, will be at position `(10,10,0)` in all other frames, too.
+
+        Returns:
+            List of point cloud data frames for each timestamp. Each data frame has columns as follows:
+                - index: `int`
+                    - Ordered point cloud. When joining the raw point cloud with data from ``SemanticSegmentation``, it is important to keep the index order.
+                - `x`: `float`
+                    - Position of point in world-coordinate system (x-axis) in meter
+                - `y`: `float`
+                    - Position of point in world-coordinate system (y-axis) in meter
+                - `z`: `float`
+                    - Position of point in world-coordinate system (z-axis) in meter
+                - `i`: `float`
+                    - Reflection intensity in a range `[0,255]`
+                - `t`: `float`
+                    - Recorded timestamp for specific point
+                - `d`: `int`
+                    - Sensor ID. `0` -&gt; mechnical 360° LiDAR, `1` -&gt; forward-facing LiDAR
+        &#34;&#34;&#34;
+        return self._data
+
+    @property
+    def poses(self) -&gt; List[Dict[str, Dict[str, float]]]:
+        &#34;&#34;&#34;Returns LiDAR sensor pose array.
+
+        Returns:
+            A pose dictionary of the LiDAR sensor in world-coordinates for each frame. The dictionary keys return the following types:
+             - `position`: `dict`
+                - `x`: `float`
+                    - Position of LiDAR sensor in world-coordinate system (x-axis) in meter
+                - `y`: `float`
+                    - Position of LiDAR sensor in world-coordinate system (y-axis) in meter
+                - `z`: `float`
+                    - Position of LiDAR sensor in world-coordinate system (z-axis) in meter
+            - `heading`: `dict`
+                - `w`: `float`
+                    - Real part of _Quaternion_
+                - `x`: `float`
+                    - First imaginary part of _Quaternion_
+                - `y`: `float`
+                    - Second imaginary part of _Quaternion_
+                - `z`: `float`
+                    - Third imaginary part of _Quaternion_
+        &#34;&#34;&#34;
+        return self._poses
+
+    @property
+    def timestamps(self) -&gt; List[float]:
+        &#34;&#34;&#34;Returns LiDAR sensor recording timestamps array.
+
+        Returns:
+            A list of timestamps in `float` format for each point cloud recorded in this sequence. To get point-wise timestamps, please refer to column `t` in `data` property return values.
+        &#34;&#34;&#34;
+        return self._timestamps
+
+    def __init__(self, directory: str) -&gt; None:
+        Sensor.__init__(self, directory)
+
+    @overload
+    def __getitem__(self, item: int) -&gt; DataFrame:
+        ...
+
+    @overload
+    def __getitem__(self, item: slice) -&gt; List[DataFrame]:
+        ...
+
+    def __getitem__(self, item):
+        return super().__getitem__(item)
+
+    def _load_data_file(self, fp: str) -&gt; DataFrame:
+        return pd.read_pickle(fp)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pandaset.sensors.Sensor" href="#pandaset.sensors.Sensor">Sensor</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="pandaset.sensors.Lidar.data"><code class="name">var <span class="ident">data</span> : List[pandas.core.frame.DataFrame]</code></dt>
+<dd>
+<div class="desc"><p>Returns LiDAR point cloud array.</p>
+<p>Point cloud data is in a world-coordinate system, i.e., a static object which is a position <code>(10,10,0)</code> in frame 1, will be at position <code>(10,10,0)</code> in all other frames, too.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List</code> of <code>point cloud data frames for each timestamp. Each data frame has columns as follows:</code></dt>
+<dd>
+<ul>
+<li>index: <code>int</code><ul>
+<li>Ordered point cloud. When joining the raw point cloud with data from <code>SemanticSegmentation</code>, it is important to keep the index order.</li>
+</ul>
+</li>
+<li><code>x</code>: <code>float</code><ul>
+<li>Position of point in world-coordinate system (x-axis) in meter</li>
+</ul>
+</li>
+<li><code>y</code>: <code>float</code><ul>
+<li>Position of point in world-coordinate system (y-axis) in meter</li>
+</ul>
+</li>
+<li><code>z</code>: <code>float</code><ul>
+<li>Position of point in world-coordinate system (z-axis) in meter</li>
+</ul>
+</li>
+<li><code>i</code>: <code>float</code><ul>
+<li>Reflection intensity in a range <code>[0,255]</code></li>
+</ul>
+</li>
+<li><code>t</code>: <code>float</code><ul>
+<li>Recorded timestamp for specific point</li>
+</ul>
+</li>
+<li><code>d</code>: <code>int</code><ul>
+<li>Sensor ID. <code>0</code> -&gt; mechnical 360° LiDAR, <code>1</code> -&gt; forward-facing LiDAR</li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def data(self) -&gt; List[pd.DataFrame]:
+    &#34;&#34;&#34;Returns LiDAR point cloud array.
+
+    Point cloud data is in a world-coordinate system, i.e., a static object which is a position `(10,10,0)` in frame 1, will be at position `(10,10,0)` in all other frames, too.
+
+    Returns:
+        List of point cloud data frames for each timestamp. Each data frame has columns as follows:
+            - index: `int`
+                - Ordered point cloud. When joining the raw point cloud with data from ``SemanticSegmentation``, it is important to keep the index order.
+            - `x`: `float`
+                - Position of point in world-coordinate system (x-axis) in meter
+            - `y`: `float`
+                - Position of point in world-coordinate system (y-axis) in meter
+            - `z`: `float`
+                - Position of point in world-coordinate system (z-axis) in meter
+            - `i`: `float`
+                - Reflection intensity in a range `[0,255]`
+            - `t`: `float`
+                - Recorded timestamp for specific point
+            - `d`: `int`
+                - Sensor ID. `0` -&gt; mechnical 360° LiDAR, `1` -&gt; forward-facing LiDAR
+    &#34;&#34;&#34;
+    return self._data</code></pre>
+</details>
+</dd>
+<dt id="pandaset.sensors.Lidar.poses"><code class="name">var <span class="ident">poses</span> : List[Dict[str, Dict[str, float]]]</code></dt>
+<dd>
+<div class="desc"><p>Returns LiDAR sensor pose array.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>A pose dictionary</code> of <code>the LiDAR sensor in world-coordinates for each frame. The dictionary keys return the following types:</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<ul>
+<li><code>position</code>: <code>dict</code><ul>
+<li><code>x</code>: <code>float</code><ul>
+<li>Position of LiDAR sensor in world-coordinate system (x-axis) in meter</li>
+</ul>
+</li>
+<li><code>y</code>: <code>float</code><ul>
+<li>Position of LiDAR sensor in world-coordinate system (y-axis) in meter</li>
+</ul>
+</li>
+<li><code>z</code>: <code>float</code><ul>
+<li>Position of LiDAR sensor in world-coordinate system (z-axis) in meter</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>heading</code>: <code>dict</code><ul>
+<li><code>w</code>: <code>float</code><ul>
+<li>Real part of <em>Quaternion</em></li>
+</ul>
+</li>
+<li><code>x</code>: <code>float</code><ul>
+<li>First imaginary part of <em>Quaternion</em></li>
+</ul>
+</li>
+<li><code>y</code>: <code>float</code><ul>
+<li>Second imaginary part of <em>Quaternion</em></li>
+</ul>
+</li>
+<li><code>z</code>: <code>float</code><ul>
+<li>Third imaginary part of <em>Quaternion</em></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def poses(self) -&gt; List[Dict[str, Dict[str, float]]]:
+    &#34;&#34;&#34;Returns LiDAR sensor pose array.
+
+    Returns:
+        A pose dictionary of the LiDAR sensor in world-coordinates for each frame. The dictionary keys return the following types:
+         - `position`: `dict`
+            - `x`: `float`
+                - Position of LiDAR sensor in world-coordinate system (x-axis) in meter
+            - `y`: `float`
+                - Position of LiDAR sensor in world-coordinate system (y-axis) in meter
+            - `z`: `float`
+                - Position of LiDAR sensor in world-coordinate system (z-axis) in meter
+        - `heading`: `dict`
+            - `w`: `float`
+                - Real part of _Quaternion_
+            - `x`: `float`
+                - First imaginary part of _Quaternion_
+            - `y`: `float`
+                - Second imaginary part of _Quaternion_
+            - `z`: `float`
+                - Third imaginary part of _Quaternion_
+    &#34;&#34;&#34;
+    return self._poses</code></pre>
+</details>
+</dd>
+<dt id="pandaset.sensors.Lidar.timestamps"><code class="name">var <span class="ident">timestamps</span> : List[float]</code></dt>
+<dd>
+<div class="desc"><p>Returns LiDAR sensor recording timestamps array.</p>
+<h2 id="returns">Returns</h2>
+<p>A list of timestamps in <code>float</code> format for each point cloud recorded in this sequence. To get point-wise timestamps, please refer to column <code>t</code> in <code>data</code> property return values.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def timestamps(self) -&gt; List[float]:
+    &#34;&#34;&#34;Returns LiDAR sensor recording timestamps array.
+
+    Returns:
+        A list of timestamps in `float` format for each point cloud recorded in this sequence. To get point-wise timestamps, please refer to column `t` in `data` property return values.
+    &#34;&#34;&#34;
+    return self._timestamps</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="pandaset.sensors.Sensor" href="#pandaset.sensors.Sensor">Sensor</a></b></code>:
+<ul class="hlist">
+<li><code><a title="pandaset.sensors.Sensor.load" href="#pandaset.sensors.Sensor.load">load</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="pandaset.sensors.Sensor"><code class="flex name class">
+<span>class <span class="ident">Sensor</span></span>
+<span>(</span><span>directory: str)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Sensor:
+    __metaclass__ = ABCMeta
+
+    @property
+    @abstractmethod
+    def _data_file_extension(self) -&gt; str:
+        ...
+
+    @property
+    def data(self) -&gt; List[T]:
+        &#34;&#34;&#34;Returns sensor data array.
+
+        Subclasses can use any type inside array.
+        &#34;&#34;&#34;
+        return self._data
+
+    @property
+    def poses(self) -&gt; List[T]:
+        &#34;&#34;&#34;Returns sensor pose array.
+
+        Subclasses can use any type inside array.
+        &#34;&#34;&#34;
+        return self._data
+
+    @property
+    def timestamps(self) -&gt; List[T]:
+        &#34;&#34;&#34;Returns sensor timestamp array.
+
+        Subclasses can use any type inside array.
+        &#34;&#34;&#34;
+        return self._data
+
+    def __init__(self, directory: str) -&gt; None:
+        self._directory: str = directory
+        self._data_structure: List[str] = None
+        self._data: List[T] = None
+        self._poses_structure: str = None
+        self._poses: List[Dict[str, T]] = None
+        self._timestamps_structure: str = None
+        self._timestamps: List[float] = None
+        self._load_structure()
+
+    @overload
+    def __getitem__(self, item: int) -&gt; T:
+        ...
+
+    @overload
+    def __getitem__(self, item: slice) -&gt; List[T]:
+        ...
+
+    def __getitem__(self, item):
+        return self._data[item]
+
+    def _load_structure(self) -&gt; None:
+        self._load_data_structure()
+        self._load_poses_structure()
+        self._load_timestamps_structure()
+
+    def _load_data_structure(self) -&gt; None:
+        self._data_structure = sorted(
+            glob.glob(f&#39;{self._directory}/*.{self._data_file_extension}&#39;))
+
+    def _load_poses_structure(self) -&gt; None:
+        poses_file = f&#39;{self._directory}/poses.json&#39;
+        if os.path.isfile(poses_file):
+            self._poses_structure = poses_file
+
+    def _load_timestamps_structure(self) -&gt; None:
+        timestamps_file = f&#39;{self._directory}/timestamps.json&#39;
+        if os.path.isfile(timestamps_file):
+            self._timestamps_structure = timestamps_file
+
+    def load(self) -&gt; None:
+        &#34;&#34;&#34;Loads all sensor files from disk into memory.
+
+        All sensor and associated meta data files are loaded into memory in filename order.
+        &#34;&#34;&#34;
+        self._load_data()
+        self._load_poses()
+        self._load_timestamps()
+
+    def _load_data(self) -&gt; None:
+        self._data = []
+        for fp in self._data_structure:
+            self._data.append(self._load_data_file(fp))
+
+    def _load_poses(self) -&gt; None:
+        self._poses = []
+        with open(self._poses_structure, &#39;r&#39;) as f:
+            file_data = json.load(f)
+            for entry in file_data:
+                self._poses.append(entry)
+
+    def _load_timestamps(self) -&gt; None:
+        self._timestamps = []
+        with open(self._timestamps_structure, &#39;r&#39;) as f:
+            file_data = json.load(f)
+            for entry in file_data:
+                self._timestamps.append(entry)
+
+    @abstractmethod
+    def _load_data_file(self, fp: str) -&gt; None:
+        ...</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="pandaset.sensors.Camera" href="#pandaset.sensors.Camera">Camera</a></li>
+<li><a title="pandaset.sensors.Lidar" href="#pandaset.sensors.Lidar">Lidar</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="pandaset.sensors.Sensor.data"><code class="name">var <span class="ident">data</span> : List[~T]</code></dt>
+<dd>
+<div class="desc"><p>Returns sensor data array.</p>
+<p>Subclasses can use any type inside array.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def data(self) -&gt; List[T]:
+    &#34;&#34;&#34;Returns sensor data array.
+
+    Subclasses can use any type inside array.
+    &#34;&#34;&#34;
+    return self._data</code></pre>
+</details>
+</dd>
+<dt id="pandaset.sensors.Sensor.poses"><code class="name">var <span class="ident">poses</span> : List[~T]</code></dt>
+<dd>
+<div class="desc"><p>Returns sensor pose array.</p>
+<p>Subclasses can use any type inside array.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def poses(self) -&gt; List[T]:
+    &#34;&#34;&#34;Returns sensor pose array.
+
+    Subclasses can use any type inside array.
+    &#34;&#34;&#34;
+    return self._data</code></pre>
+</details>
+</dd>
+<dt id="pandaset.sensors.Sensor.timestamps"><code class="name">var <span class="ident">timestamps</span> : List[~T]</code></dt>
+<dd>
+<div class="desc"><p>Returns sensor timestamp array.</p>
+<p>Subclasses can use any type inside array.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def timestamps(self) -&gt; List[T]:
+    &#34;&#34;&#34;Returns sensor timestamp array.
+
+    Subclasses can use any type inside array.
+    &#34;&#34;&#34;
+    return self._data</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="pandaset.sensors.Sensor.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>self) -> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Loads all sensor files from disk into memory.</p>
+<p>All sensor and associated meta data files are loaded into memory in filename order.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load(self) -&gt; None:
+    &#34;&#34;&#34;Loads all sensor files from disk into memory.
+
+    All sensor and associated meta data files are loaded into memory in filename order.
+    &#34;&#34;&#34;
+    self._load_data()
+    self._load_poses()
+    self._load_timestamps()</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="pandaset" href="index.html">pandaset</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="pandaset.sensors.Camera" href="#pandaset.sensors.Camera">Camera</a></code></h4>
+<ul class="">
+<li><code><a title="pandaset.sensors.Camera.data" href="#pandaset.sensors.Camera.data">data</a></code></li>
+<li><code><a title="pandaset.sensors.Camera.intrinsics" href="#pandaset.sensors.Camera.intrinsics">intrinsics</a></code></li>
+<li><code><a title="pandaset.sensors.Camera.poses" href="#pandaset.sensors.Camera.poses">poses</a></code></li>
+<li><code><a title="pandaset.sensors.Camera.timestamps" href="#pandaset.sensors.Camera.timestamps">timestamps</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="pandaset.sensors.Intrinsics" href="#pandaset.sensors.Intrinsics">Intrinsics</a></code></h4>
+<ul class="">
+<li><code><a title="pandaset.sensors.Intrinsics.cx" href="#pandaset.sensors.Intrinsics.cx">cx</a></code></li>
+<li><code><a title="pandaset.sensors.Intrinsics.cy" href="#pandaset.sensors.Intrinsics.cy">cy</a></code></li>
+<li><code><a title="pandaset.sensors.Intrinsics.fx" href="#pandaset.sensors.Intrinsics.fx">fx</a></code></li>
+<li><code><a title="pandaset.sensors.Intrinsics.fy" href="#pandaset.sensors.Intrinsics.fy">fy</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="pandaset.sensors.Lidar" href="#pandaset.sensors.Lidar">Lidar</a></code></h4>
+<ul class="">
+<li><code><a title="pandaset.sensors.Lidar.data" href="#pandaset.sensors.Lidar.data">data</a></code></li>
+<li><code><a title="pandaset.sensors.Lidar.poses" href="#pandaset.sensors.Lidar.poses">poses</a></code></li>
+<li><code><a title="pandaset.sensors.Lidar.timestamps" href="#pandaset.sensors.Lidar.timestamps">timestamps</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="pandaset.sensors.Sensor" href="#pandaset.sensors.Sensor">Sensor</a></code></h4>
+<ul class="">
+<li><code><a title="pandaset.sensors.Sensor.data" href="#pandaset.sensors.Sensor.data">data</a></code></li>
+<li><code><a title="pandaset.sensors.Sensor.load" href="#pandaset.sensors.Sensor.load">load</a></code></li>
+<li><code><a title="pandaset.sensors.Sensor.poses" href="#pandaset.sensors.Sensor.poses">poses</a></code></li>
+<li><code><a title="pandaset.sensors.Sensor.timestamps" href="#pandaset.sensors.Sensor.timestamps">timestamps</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>
