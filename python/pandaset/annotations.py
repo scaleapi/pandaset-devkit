@@ -20,7 +20,7 @@ class Annotation:
          directory: Absolute or relative path where annotation files are stored
 
     Attributes:
-        _data: List of annotation data objects. The type of list elements depends on the subclass implementation of protected method ``_load_data_file``
+        data: List of annotation data objects. The type of list elements depends on the subclass implementation of protected method ``_load_data_file``
     """
     __metaclass__ = ABCMeta
 
@@ -87,8 +87,7 @@ class Cuboids(Annotation):
          directory: Absolute or relative path where annotation files are stored
 
     Attributes:
-        data: List of points and their Class ID.
-        classes: Dict containing class id to class name mapping.
+        data: List of cuboids for each frame of scene.
     """
 
     @property
@@ -198,8 +197,8 @@ class SemanticSegmentation(Annotation):
          directory: Absolute or relative path where annotation files are stored
 
     Attributes:
-        data: List of points and their Class ID.
-        classes: Dict containing class id to class name mapping.
+        data: List of points and their class ID for each frame.
+        classes: Dict containing class ID to class name mapping.
     """
 
     @property
@@ -221,11 +220,16 @@ class SemanticSegmentation(Annotation):
 
     @property
     def classes(self) -> Dict[str, str]:
+        """Returns class id to class name mapping.
+
+        Returns:
+            Dictionary with class ID as key and class name as value. Valid for the complete scene.
+        """
         return self._classes
 
     def __init__(self, directory: str) -> None:
         self._classes_structure: str = None
-        self._classes: DataFrame = None
+        self._classes: Dict[str, str] = None
         Annotation.__init__(self, directory)
 
     @overload
