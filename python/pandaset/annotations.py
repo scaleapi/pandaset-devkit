@@ -81,7 +81,7 @@ class Annotation:
 class Cuboids(Annotation):
     """Loads and provides Cuboid annotations. Subclass of ``Annotation``.
 
-    ``Cuboids`` loads files in `{sequence_id}/annotations/annotations/cuboids/` containing .
+    ``Cuboids`` loads files in `{sequence_id}/annotations/annotations/cuboids/` containing cuboid annotations.
 
     Args:
          directory: Absolute or relative path where annotation files are stored
