@@ -253,8 +253,10 @@ API Reference: [Cuboids class](https://scaleapi.github.io/pandaset-devkit/annota
 Analogous to the cuboid annotations, the Semantic Segmentation can be accessed using the `semseg` property on the sequence object. The index of each Semantic Segmentation data frame corresponds to the index of each LiDAR point cloud data frame, and can be joined using the index.
 ```
 >>> semseg0 = seq002.semseg[0]  # Returns the semantic segmentation for the first LiDAR frame in the sequence
->>> print(semseg0.columns)  # Index(['class'], dtype='object')
+>>> print(semseg0.columns)
 Index(['class'], dtype='object')
+>>> print(seq002.semseg.classes)
+{'1': 'Smoke', '2': 'Exhaust', '3': 'Spray or rain', '4': 'Reflection', '5': 'Vegetation', '6': 'Ground', '7': 'Road', '8': 'Lane Line Marking', '9': 'Stop Line Marking', '10': 'Other Road Marking', '11': 'Sidewalk', '12': 'Driveway', '13': 'Car', '14': 'Pickup Truck', '15': 'Medium-sized Truck', '16': 'Semi-truck', '17': 'Towed Object', '18': 'Motorcycle', '19': 'Other Vehicle - Construction Vehicle', '20': 'Other Vehicle - Uncommon', '21': 'Other Vehicle - Pedicab', '22': 'Emergency Vehicle', '23': 'Bus', '24': 'Personal Mobility Device', '25': 'Motorized Scooter', '26': 'Bicycle', '27': 'Train', '28': 'Trolley', '29': 'Tram / Subway', '30': 'Pedestrian', '31': 'Pedestrian with Object', '32': 'Animals - Bird', '33': 'Animals - Other', '34': 'Pylons', '35': 'Road Barriers', '36': 'Signs', '37': 'Cones', '38': 'Construction Signs', '39': 'Temporary Construction Barriers', '40': 'Rolling Containers', '41': 'Building', '42': 'Other Static Object'}
 ```
 
 API Reference: [SemanticSegmentation class](https://scaleapi.github.io/pandaset-devkit/annotations.html#pandaset.annotations.SemanticSegmentation)
