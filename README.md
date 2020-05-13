@@ -162,6 +162,8 @@ index
 ```
 
 The LiDAR points are stored in a world coordinate system; therefore it is not required to transform them using the vehicle's pose graph. This allows you to query all LiDAR frames in the sequence or a certain sampling rate and simply visualize them using your preferred library.
+
+Instead of using always all of the point clouds available, it is also possible to simply slice the `lidar` property as one is used from python lists.
 ```
 >>> pc_all = seq002.lidar[:]  # Returns all LiDAR frames from the sequence
 ```
@@ -178,6 +180,51 @@ In addition to the LiDAR points, the `lidar` property also holds the sensor pose
 >>> timestamps = lidar_obj.timestamps[sl]
 >>> print( len(pcs) == len(poses) == len(timestamps) )
 True
+```
+
+The LiDAR point clouds include by default the points from both the mechanical 360° LiDAR and the front-facing LiDAR. To select only one of the sensors, the `set_sensor` method is available.
+```
+>>> pc0 = s002.lidar[0]
+>>> print(pc0.shape)
+(166768, 6)
+>>> s002.lidar.set_sensor(0)  # set to include only mechanical 360° LiDAR
+>>> pc0_sensor0 = s002.lidar[0]
+>>> print(pc0_sensor0.shape)
+(106169, 6)
+>>> s002.lidar.set_sensor(1)  # set to include only front-facing LiDAR
+>>> pc0_sensor1 = s002.lidar[0]
+>>> print(pc0_sensor1.shape)
+(60599, 6)
+```
+Since the applied filter operation leaves the original row index intact for each point (relevant for joining with `SemanticSegmentation`), one can easily test that no point was left out in filtering:
+```
+>>> import pandas as pd
+>>> pc0_concat = pd.concat([pc0_sensor0, pc0_sensor1])
+>>> print(pc0_concat.shape)
+(166768, 6)
+>>> print(pc0 == pc0_concat)
+           x     y     z     i     t     d
+index                                     
+0       True  True  True  True  True  True
+1       True  True  True  True  True  True
+2       True  True  True  True  True  True
+3       True  True  True  True  True  True
+4       True  True  True  True  True  True
+      ...   ...   ...   ...   ...   ...
+166763  True  True  True  True  True  True
+166764  True  True  True  True  True  True
+166765  True  True  True  True  True  True
+166766  True  True  True  True  True  True
+166767  True  True  True  True  True  True
+[166768 rows x 6 columns]
+>>> print((~(pc0 == pc0_concat)).sum())  # Counts the number of cells with `False` value, i.e., the ones where original point cloud and concatenated filtered point cloud differentiate
+x    0
+y    0
+z    0
+i    0
+t    0
+d    0
+dtype: int64
 ```
 
 API Reference: [Lidar class](https://scaleapi.github.io/pandaset-devkit/sensors.html#pandaset.sensors.Lidar)
