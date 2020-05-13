@@ -35,7 +35,7 @@ class Sensor:
 
         Subclasses can use any type inside array.
         """
-        return self._data
+        return self._poses
 
     @property
     def timestamps(self) -> List[T]:
@@ -43,7 +43,7 @@ class Sensor:
 
         Subclasses can use any type inside array.
         """
-        return self._data
+        return self._timestamps
 
     def __init__(self, directory: str) -> None:
         self._directory: str = directory
@@ -64,7 +64,7 @@ class Sensor:
         ...
 
     def __getitem__(self, item):
-        return self._data[item]
+        return self.data[item]
 
     def _load_structure(self) -> None:
         self._load_data_structure()
