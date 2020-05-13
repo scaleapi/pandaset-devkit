@@ -40,6 +40,19 @@ T = TypeVar(&#39;T&#39;)
 
 
 class Sensor:
+    &#34;&#34;&#34;Meta class inherited by subclasses for more specific sensor types.
+
+   ``Sensor`` provides generic preparation and loading methods for PandaSet folder structures. Subclasses
+   for specific sensor types must implement certain methods, as well as can override existing ones for extension.
+
+   Args:
+        directory: Absolute or relative path where sensor files are stored
+
+   Attributes:
+       data: List of sensor data objects. The type of list elements depends on the subclass implementation of protected method ``_load_data_file``
+       poses: List of sensor poses in world-coordinates
+       timestamps: List of recording timestamps for sensor
+   &#34;&#34;&#34;
     __metaclass__ = ABCMeta
 
     @property
@@ -61,7 +74,7 @@ class Sensor:
 
         Subclasses can use any type inside array.
         &#34;&#34;&#34;
-        return self._data
+        return self._poses
 
     @property
     def timestamps(self) -&gt; List[T]:
@@ -69,7 +82,7 @@ class Sensor:
 
         Subclasses can use any type inside array.
         &#34;&#34;&#34;
-        return self._data
+        return self._timestamps
 
     def __init__(self, directory: str) -&gt; None:
         self._directory: str = directory
@@ -90,7 +103,7 @@ class Sensor:
         ...
 
     def __getitem__(self, item):
-        return self._data[item]
+        return self.data[item]
 
     def _load_structure(self) -&gt; None:
         self._load_data_structure()
@@ -151,7 +164,7 @@ class Lidar(Sensor):
 
     @property
     def data(self) -&gt; List[pd.DataFrame]:
-        &#34;&#34;&#34;Returns LiDAR point cloud array.
+        &#34;&#34;&#34;Returns (filtered) LiDAR point cloud array.
 
         Point cloud data is in a world-coordinate system, i.e., a static object which is a position `(10,10,0)` in frame 1, will be at position `(10,10,0)` in all other frames, too.
 
@@ -172,7 +185,10 @@ class Lidar(Sensor):
                 - `d`: `int`
                     - Sensor ID. `0` -&gt; mechnical 360° LiDAR, `1` -&gt; forward-facing LiDAR
         &#34;&#34;&#34;
-        return self._data
+        if self._sensor_id in [0, 1]:
+            return [df.loc[df[&#39;d&#39;] == self._sensor_id] for df in self._data]
+        else:
+            return self._data
 
     @property
     def poses(self) -&gt; List[Dict[str, Dict[str, float]]]:
@@ -209,6 +225,7 @@ class Lidar(Sensor):
         return self._timestamps
 
     def __init__(self, directory: str) -&gt; None:
+        self._sensor_id = -1
         Sensor.__init__(self, directory)
 
     @overload
@@ -221,6 +238,15 @@ class Lidar(Sensor):
 
     def __getitem__(self, item):
         return super().__getitem__(item)
+
+    def set_sensor(self, sensor_id: int) -&gt; None:
+        &#34;&#34;&#34;Specifies a sensor which should be returned exclusively in the data objects
+
+        Args:
+            sensor_id: Set `-1` for both LiDAR sensors, set `0` for mechanical 360° LiDAR, set `1` for front-facing LiDAR.
+
+        &#34;&#34;&#34;
+        self._sensor_id = sensor_id
 
     def _load_data_file(self, fp: str) -&gt; DataFrame:
         return pd.read_pickle(fp)
@@ -392,7 +418,23 @@ if __name__ == &#39;__main__&#39;:
 <span>(</span><span>directory: str)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Meta class inherited by subclasses for more specific sensor types.</p>
+<p><code><a title="pandaset.sensors.Sensor" href="#pandaset.sensors.Sensor">Sensor</a></code> provides generic preparation and loading methods for PandaSet folder structures. Subclasses
+for specific sensor types must implement certain methods, as well as can override existing ones for extension.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>directory</code></strong></dt>
+<dd>Absolute or relative path where sensor files are stored</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>data</code></strong></dt>
+<dd>List of sensor data objects. The type of list elements depends on the subclass implementation of protected method <code>_load_data_file</code></dd>
+<dt><strong><code>poses</code></strong></dt>
+<dd>List of sensor poses in world-coordinates</dd>
+<dt><strong><code>timestamps</code></strong></dt>
+<dd>List of recording timestamps for sensor</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -799,7 +841,23 @@ def fy(self) -&gt; float:
 <span>(</span><span>directory: str)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Meta class inherited by subclasses for more specific sensor types.</p>
+<p><code><a title="pandaset.sensors.Sensor" href="#pandaset.sensors.Sensor">Sensor</a></code> provides generic preparation and loading methods for PandaSet folder structures. Subclasses
+for specific sensor types must implement certain methods, as well as can override existing ones for extension.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>directory</code></strong></dt>
+<dd>Absolute or relative path where sensor files are stored</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>data</code></strong></dt>
+<dd>List of sensor data objects. The type of list elements depends on the subclass implementation of protected method <code>_load_data_file</code></dd>
+<dt><strong><code>poses</code></strong></dt>
+<dd>List of sensor poses in world-coordinates</dd>
+<dt><strong><code>timestamps</code></strong></dt>
+<dd>List of recording timestamps for sensor</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -811,7 +869,7 @@ def fy(self) -&gt; float:
 
     @property
     def data(self) -&gt; List[pd.DataFrame]:
-        &#34;&#34;&#34;Returns LiDAR point cloud array.
+        &#34;&#34;&#34;Returns (filtered) LiDAR point cloud array.
 
         Point cloud data is in a world-coordinate system, i.e., a static object which is a position `(10,10,0)` in frame 1, will be at position `(10,10,0)` in all other frames, too.
 
@@ -832,7 +890,10 @@ def fy(self) -&gt; float:
                 - `d`: `int`
                     - Sensor ID. `0` -&gt; mechnical 360° LiDAR, `1` -&gt; forward-facing LiDAR
         &#34;&#34;&#34;
-        return self._data
+        if self._sensor_id in [0, 1]:
+            return [df.loc[df[&#39;d&#39;] == self._sensor_id] for df in self._data]
+        else:
+            return self._data
 
     @property
     def poses(self) -&gt; List[Dict[str, Dict[str, float]]]:
@@ -869,6 +930,7 @@ def fy(self) -&gt; float:
         return self._timestamps
 
     def __init__(self, directory: str) -&gt; None:
+        self._sensor_id = -1
         Sensor.__init__(self, directory)
 
     @overload
@@ -882,6 +944,15 @@ def fy(self) -&gt; float:
     def __getitem__(self, item):
         return super().__getitem__(item)
 
+    def set_sensor(self, sensor_id: int) -&gt; None:
+        &#34;&#34;&#34;Specifies a sensor which should be returned exclusively in the data objects
+
+        Args:
+            sensor_id: Set `-1` for both LiDAR sensors, set `0` for mechanical 360° LiDAR, set `1` for front-facing LiDAR.
+
+        &#34;&#34;&#34;
+        self._sensor_id = sensor_id
+
     def _load_data_file(self, fp: str) -&gt; DataFrame:
         return pd.read_pickle(fp)</code></pre>
 </details>
@@ -893,7 +964,7 @@ def fy(self) -&gt; float:
 <dl>
 <dt id="pandaset.sensors.Lidar.data"><code class="name">var <span class="ident">data</span> : List[pandas.core.frame.DataFrame]</code></dt>
 <dd>
-<div class="desc"><p>Returns LiDAR point cloud array.</p>
+<div class="desc"><p>Returns (filtered) LiDAR point cloud array.</p>
 <p>Point cloud data is in a world-coordinate system, i.e., a static object which is a position <code>(10,10,0)</code> in frame 1, will be at position <code>(10,10,0)</code> in all other frames, too.</p>
 <h2 id="returns">Returns</h2>
 <dl>
@@ -937,7 +1008,7 @@ def fy(self) -&gt; float:
 </summary>
 <pre><code class="python">@property
 def data(self) -&gt; List[pd.DataFrame]:
-    &#34;&#34;&#34;Returns LiDAR point cloud array.
+    &#34;&#34;&#34;Returns (filtered) LiDAR point cloud array.
 
     Point cloud data is in a world-coordinate system, i.e., a static object which is a position `(10,10,0)` in frame 1, will be at position `(10,10,0)` in all other frames, too.
 
@@ -958,7 +1029,10 @@ def data(self) -&gt; List[pd.DataFrame]:
             - `d`: `int`
                 - Sensor ID. `0` -&gt; mechnical 360° LiDAR, `1` -&gt; forward-facing LiDAR
     &#34;&#34;&#34;
-    return self._data</code></pre>
+    if self._sensor_id in [0, 1]:
+        return [df.loc[df[&#39;d&#39;] == self._sensor_id] for df in self._data]
+    else:
+        return self._data</code></pre>
 </details>
 </dd>
 <dt id="pandaset.sensors.Lidar.poses"><code class="name">var <span class="ident">poses</span> : List[Dict[str, Dict[str, float]]]</code></dt>
@@ -1055,6 +1129,33 @@ def timestamps(self) -&gt; List[float]:
 </details>
 </dd>
 </dl>
+<h3>Methods</h3>
+<dl>
+<dt id="pandaset.sensors.Lidar.set_sensor"><code class="name flex">
+<span>def <span class="ident">set_sensor</span></span>(<span>self, sensor_id: int) -> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Specifies a sensor which should be returned exclusively in the data objects</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>sensor_id</code></strong></dt>
+<dd>Set <code>-1</code> for both LiDAR sensors, set <code>0</code> for mechanical 360° LiDAR, set <code>1</code> for front-facing LiDAR.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_sensor(self, sensor_id: int) -&gt; None:
+    &#34;&#34;&#34;Specifies a sensor which should be returned exclusively in the data objects
+
+    Args:
+        sensor_id: Set `-1` for both LiDAR sensors, set `0` for mechanical 360° LiDAR, set `1` for front-facing LiDAR.
+
+    &#34;&#34;&#34;
+    self._sensor_id = sensor_id</code></pre>
+</details>
+</dd>
+</dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
 <li><code><b><a title="pandaset.sensors.Sensor" href="#pandaset.sensors.Sensor">Sensor</a></b></code>:
@@ -1069,12 +1170,41 @@ def timestamps(self) -&gt; List[float]:
 <span>(</span><span>directory: str)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Meta class inherited by subclasses for more specific sensor types.</p>
+<p><code><a title="pandaset.sensors.Sensor" href="#pandaset.sensors.Sensor">Sensor</a></code> provides generic preparation and loading methods for PandaSet folder structures. Subclasses
+for specific sensor types must implement certain methods, as well as can override existing ones for extension.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>directory</code></strong></dt>
+<dd>Absolute or relative path where sensor files are stored</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>data</code></strong></dt>
+<dd>List of sensor data objects. The type of list elements depends on the subclass implementation of protected method <code>_load_data_file</code></dd>
+<dt><strong><code>poses</code></strong></dt>
+<dd>List of sensor poses in world-coordinates</dd>
+<dt><strong><code>timestamps</code></strong></dt>
+<dd>List of recording timestamps for sensor</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Sensor:
+    &#34;&#34;&#34;Meta class inherited by subclasses for more specific sensor types.
+
+   ``Sensor`` provides generic preparation and loading methods for PandaSet folder structures. Subclasses
+   for specific sensor types must implement certain methods, as well as can override existing ones for extension.
+
+   Args:
+        directory: Absolute or relative path where sensor files are stored
+
+   Attributes:
+       data: List of sensor data objects. The type of list elements depends on the subclass implementation of protected method ``_load_data_file``
+       poses: List of sensor poses in world-coordinates
+       timestamps: List of recording timestamps for sensor
+   &#34;&#34;&#34;
     __metaclass__ = ABCMeta
 
     @property
@@ -1096,7 +1226,7 @@ def timestamps(self) -&gt; List[float]:
 
         Subclasses can use any type inside array.
         &#34;&#34;&#34;
-        return self._data
+        return self._poses
 
     @property
     def timestamps(self) -&gt; List[T]:
@@ -1104,7 +1234,7 @@ def timestamps(self) -&gt; List[float]:
 
         Subclasses can use any type inside array.
         &#34;&#34;&#34;
-        return self._data
+        return self._timestamps
 
     def __init__(self, directory: str) -&gt; None:
         self._directory: str = directory
@@ -1125,7 +1255,7 @@ def timestamps(self) -&gt; List[float]:
         ...
 
     def __getitem__(self, item):
-        return self._data[item]
+        return self.data[item]
 
     def _load_structure(self) -&gt; None:
         self._load_data_structure()
@@ -1216,7 +1346,7 @@ def poses(self) -&gt; List[T]:
 
     Subclasses can use any type inside array.
     &#34;&#34;&#34;
-    return self._data</code></pre>
+    return self._poses</code></pre>
 </details>
 </dd>
 <dt id="pandaset.sensors.Sensor.timestamps"><code class="name">var <span class="ident">timestamps</span> : List[~T]</code></dt>
@@ -1233,7 +1363,7 @@ def timestamps(self) -&gt; List[T]:
 
     Subclasses can use any type inside array.
     &#34;&#34;&#34;
-    return self._data</code></pre>
+    return self._timestamps</code></pre>
 </details>
 </dd>
 </dl>
@@ -1300,6 +1430,7 @@ def timestamps(self) -&gt; List[T]:
 <ul class="">
 <li><code><a title="pandaset.sensors.Lidar.data" href="#pandaset.sensors.Lidar.data">data</a></code></li>
 <li><code><a title="pandaset.sensors.Lidar.poses" href="#pandaset.sensors.Lidar.poses">poses</a></code></li>
+<li><code><a title="pandaset.sensors.Lidar.set_sensor" href="#pandaset.sensors.Lidar.set_sensor">set_sensor</a></code></li>
 <li><code><a title="pandaset.sensors.Lidar.timestamps" href="#pandaset.sensors.Lidar.timestamps">timestamps</a></code></li>
 </ul>
 </li>
