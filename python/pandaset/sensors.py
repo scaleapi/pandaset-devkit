@@ -14,6 +14,19 @@ T = TypeVar('T')
 
 
 class Sensor:
+    """Meta class inherited by subclasses for more specific sensor types.
+
+   ``Sensor`` provides generic preparation and loading methods for PandaSet folder structures. Subclasses
+   for specific sensor types must implement certain methods, as well as can override existing ones for extension.
+
+   Args:
+        directory: Absolute or relative path where sensor files are stored
+
+   Attributes:
+       data: List of sensor data objects. The type of list elements depends on the subclass implementation of protected method ``_load_data_file``
+       poses: List of sensor poses in world-coordinates
+       timestamps: List of recording timestamps for sensor
+   """
     __metaclass__ = ABCMeta
 
     @property
@@ -35,7 +48,7 @@ class Sensor:
 
         Subclasses can use any type inside array.
         """
-        return self._data
+        return self._poses
 
     @property
     def timestamps(self) -> List[T]:
@@ -43,7 +56,7 @@ class Sensor:
 
         Subclasses can use any type inside array.
         """
-        return self._data
+        return self._timestamps
 
     def __init__(self, directory: str) -> None:
         self._directory: str = directory
@@ -64,7 +77,7 @@ class Sensor:
         ...
 
     def __getitem__(self, item):
-        return self._data[item]
+        return self.data[item]
 
     def _load_structure(self) -> None:
         self._load_data_structure()
@@ -125,7 +138,7 @@ class Lidar(Sensor):
 
     @property
     def data(self) -> List[pd.DataFrame]:
-        """Returns LiDAR point cloud array.
+        """Returns (filtered) LiDAR point cloud array.
 
         Point cloud data is in a world-coordinate system, i.e., a static object which is a position `(10,10,0)` in frame 1, will be at position `(10,10,0)` in all other frames, too.
 
@@ -146,7 +159,10 @@ class Lidar(Sensor):
                 - `d`: `int`
                     - Sensor ID. `0` -> mechnical 360° LiDAR, `1` -> forward-facing LiDAR
         """
-        return self._data
+        if self._sensor_id in [0, 1]:
+            return [df.loc[df['d'] == self._sensor_id] for df in self._data]
+        else:
+            return self._data
 
     @property
     def poses(self) -> List[Dict[str, Dict[str, float]]]:
@@ -183,6 +199,7 @@ class Lidar(Sensor):
         return self._timestamps
 
     def __init__(self, directory: str) -> None:
+        self._sensor_id = -1
         Sensor.__init__(self, directory)
 
     @overload
@@ -195,6 +212,15 @@ class Lidar(Sensor):
 
     def __getitem__(self, item):
         return super().__getitem__(item)
+
+    def set_sensor(self, sensor_id: int) -> None:
+        """Specifies a sensor which should be returned exclusively in the data objects
+
+        Args:
+            sensor_id: Set `-1` for both LiDAR sensors, set `0` for mechanical 360° LiDAR, set `1` for front-facing LiDAR.
+
+        """
+        self._sensor_id = sensor_id
 
     def _load_data_file(self, fp: str) -> DataFrame:
         return pd.read_pickle(fp)
