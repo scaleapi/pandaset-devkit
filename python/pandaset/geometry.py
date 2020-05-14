@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import numpy as np
 import transforms3d as t3d
 
@@ -15,22 +14,13 @@ def _heading_position_to_mat(heading, position):
     return transform_matrix
 
 
-def projection(lidar: Lidar, camera: Camera, idx: int, filter_outliers=True):
-    assert idx < len(
-        lidar.data
-    ), "idx is bigger than lidar sequence lenght or lidar is not loaded"
-    assert idx < len(
-        camera.data
-    ), "idx is bigger than camera sequence lenght or camera is not loaded"
-
-    camera_pose = camera.poses[idx]
-    camera_intrinsics = camera.intrinsics
+def projection(lidar_points, camera_data, camera_pose, camera_intrinsics, filter_outliers=True):
     camera_heading = camera_pose['heading']
     camera_position = camera_pose['position']
     camera_pose_mat = _heading_position_to_mat(camera_heading, camera_position)
 
     trans_lidar_to_camera = np.linalg.inv(camera_pose_mat)
-    points3d_lidar = lidar.data[idx].to_numpy()[:, :3]
+    points3d_lidar = lidar_points
     points3d_camera = trans_lidar_to_camera[:3, :3] @ (points3d_lidar.T) + \
                         trans_lidar_to_camera[:3, 3].reshape(3, 1)
 
@@ -50,7 +40,7 @@ def projection(lidar: Lidar, camera: Camera, idx: int, filter_outliers=True):
     points2d_camera = (points2d_camera[:2, :] / points2d_camera[2, :]).T
 
     if filter_outliers:
-        image_w, image_h = camera.data[0].size
+        image_w, image_h = camera_data.size
         condition = np.logical_and(
             (points2d_camera[:, 1] < image_h) & (points2d_camera[:, 1] > 0),
             (points2d_camera[:, 0] < image_w) & (points2d_camera[:, 0] > 0))
@@ -58,6 +48,34 @@ def projection(lidar: Lidar, camera: Camera, idx: int, filter_outliers=True):
         points3d_camera = (points3d_camera.T)[condition]
         inliner_indices_arr = inliner_indices_arr[condition]
     return points2d_camera, points3d_camera, inliner_indices_arr
+
+
+def lidar_points_to_ego(points, lidar_pose):
+    lidar_pose_mat = _heading_position_to_mat(
+        lidar_pose['heading'], lidar_pose['position'])
+    transform_matrix = np.linalg.inv(lidar_pose_mat)
+    return (transform_matrix[:3, :3] @ points.T +  transform_matrix[:3, [3]]).T
+
+
+def center_box_to_corners(box):
+    pos_x, pos_y, pos_z, dim_x, dim_y, dim_z, yaw = box
+    half_dim_x, half_dim_y, half_dim_z = dim_x/2.0, dim_y/2.0, dim_z/2.0
+    corners = np.array([[half_dim_x, half_dim_y, -half_dim_z],
+                        [half_dim_x, -half_dim_y, -half_dim_z],
+                        [-half_dim_x, -half_dim_y, -half_dim_z],
+                        [-half_dim_x, half_dim_y, -half_dim_z],
+                        [half_dim_x, half_dim_y, half_dim_z],
+                        [half_dim_x, -half_dim_y, half_dim_z],
+                        [-half_dim_x, -half_dim_y, half_dim_z],
+                        [-half_dim_x, half_dim_y, half_dim_z]])
+    transform_matrix = np.array([
+        [np.cos(yaw), -np.sin(yaw), 0, pos_x],
+        [np.sin(yaw), np.cos(yaw), 0, pos_y],
+        [0, 0, 1.0, pos_z],
+        [0, 0, 0, 1.0],
+    ])
+    corners = (transform_matrix[:3, :3] @ corners.T + transform_matrix[:3, [3]]).T
+    return corners
 
 
 if __name__ == '__main__':
