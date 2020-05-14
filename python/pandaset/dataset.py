@@ -34,8 +34,11 @@ class DataSet:
             seq_id = sd.split('/')[-1].split('\\')[-1]
             self._sequences[seq_id] = Sequence(sd)
 
-    def sequences(self) -> List[str]:
+    def sequences(self, with_semseg: bool = False) -> List[str]:
         """ Lists all available sequence names
+
+        Args:
+            with_semseg: Set `True` if only sequences with semantic segmentation annotations should be returned. Set `False` to return all sequences (with or without semantic segmentation).
 
         Returns:
             List of sequence names.
@@ -47,7 +50,10 @@ class DataSet:
 
 
         """
-        return list(self._sequences.keys())
+        if with_semseg:
+            return [s for s in list(self._sequences.keys()) if self._sequences[s].semseg]
+        else:
+            return list(self._sequences.keys())
 
 
 if __name__ == '__main__':
