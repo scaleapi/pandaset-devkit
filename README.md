@@ -27,25 +27,23 @@ Unpack the archive into any directory on your hard disk. The path will be refere
 ├── annotations
 │   ├── cuboids
 │   │   ├── 00.pkl.gz
-│   │   ├── 01.pkl.gz
-│   │   ├── ...
-│   │   ├── 78.pkl.gz
+│   │   .
+│   │   .
+│   │   .
 │   │   └── 79.pkl.gz
-| [  // Semantic Segmentation is available for some scenes
-│   └── semseg
+│   └── semseg  // Semantic Segmentation is available for specific scenes
 │       ├── 00.pkl.gz
-│       ├── 01.pkl.gz
-│       ├── ...
-│       ├── 78.pkl.gz
+│       .
+│       .
+│       .
 │       ├── 79.pkl.gz
 │       └── classes.json
-| ]
 ├── camera
 │   ├── back_camera
 │   │   ├── 00.jpg
-│   │   ├── 01.jpg
-│   │   ├── ...
-│   │   ├── 78.jpg
+│   │   .
+│   │   .
+│   │   .
 │   │   ├── 79.jpg
 │   │   ├── intrinsics.json
 │   │   ├── poses.json
@@ -62,9 +60,9 @@ Unpack the archive into any directory on your hard disk. The path will be refere
 │       └── ...
 ├── lidar
 │   ├── 00.pkl.gz
-│   ├── 01.pkl.gz
-│   ├── ...
-│   ├── 78.pkl.gz
+│   .
+│   .
+│   .
 │   ├── 79.pkl.gz
 │   ├── poses.json
 │   └── timestamps.json
@@ -100,10 +98,18 @@ Afterwards we can list all the sequence IDs that have been found in the data fol
 ['002',...]
 ```
 
+Since semantic segmentation annotations are not always available for scenes, we can filter to get only scenes that have both semantic segmentation as well as cuboid annotations.
+```
+>>> print(dataset.sequences(with_semseg=True))
+['002',...]
+```
+
 Now, we access a specific sequence by choosing its key from the previously returned list, in this case sequence ID `'002'`
 ```
 >>> seq002 = dataset['002']
 ```
+
+
 
 API Reference: [DataSet class](https://scaleapi.github.io/pandaset-devkit/dataset.html#pandaset.dataset.DataSet)
 
