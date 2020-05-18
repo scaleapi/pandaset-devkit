@@ -60,8 +60,11 @@ class DataSet:
             seq_id = sd.split(&#39;/&#39;)[-1].split(&#39;\\&#39;)[-1]
             self._sequences[seq_id] = Sequence(sd)
 
-    def sequences(self) -&gt; List[str]:
+    def sequences(self, with_semseg: bool = False) -&gt; List[str]:
         &#34;&#34;&#34; Lists all available sequence names
+
+        Args:
+            with_semseg: Set `True` if only sequences with semantic segmentation annotations should be returned. Set `False` to return all sequences (with or without semantic segmentation).
 
         Returns:
             List of sequence names.
@@ -73,7 +76,10 @@ class DataSet:
 
 
         &#34;&#34;&#34;
-        return list(self._sequences.keys())
+        if with_semseg:
+            return [s for s in list(self._sequences.keys()) if self._sequences[s].semseg]
+        else:
+            return list(self._sequences.keys())
 
 
 if __name__ == &#39;__main__&#39;:
@@ -139,8 +145,11 @@ Access to a specific sequence is provided by using the sequence name as a key on
             seq_id = sd.split(&#39;/&#39;)[-1].split(&#39;\\&#39;)[-1]
             self._sequences[seq_id] = Sequence(sd)
 
-    def sequences(self) -&gt; List[str]:
+    def sequences(self, with_semseg: bool = False) -&gt; List[str]:
         &#34;&#34;&#34; Lists all available sequence names
+
+        Args:
+            with_semseg: Set `True` if only sequences with semantic segmentation annotations should be returned. Set `False` to return all sequences (with or without semantic segmentation).
 
         Returns:
             List of sequence names.
@@ -152,15 +161,23 @@ Access to a specific sequence is provided by using the sequence name as a key on
 
 
         &#34;&#34;&#34;
-        return list(self._sequences.keys())</code></pre>
+        if with_semseg:
+            return [s for s in list(self._sequences.keys()) if self._sequences[s].semseg]
+        else:
+            return list(self._sequences.keys())</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
 <dt id="pandaset.dataset.DataSet.sequences"><code class="name flex">
-<span>def <span class="ident">sequences</span></span>(<span>self) -> List[str]</span>
+<span>def <span class="ident">sequences</span></span>(<span>self, with_semseg: bool = False) -> List[str]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Lists all available sequence names</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>with_semseg</code></strong></dt>
+<dd>Set <code>True</code> if only sequences with semantic segmentation annotations should be returned. Set <code>False</code> to return all sequences (with or without semantic segmentation).</dd>
+</dl>
 <h2 id="returns">Returns</h2>
 <p>List of sequence names.</p>
 <h2 id="examples">Examples</h2>
@@ -172,8 +189,11 @@ Access to a specific sequence is provided by using the sequence name as a key on
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def sequences(self) -&gt; List[str]:
+<pre><code class="python">def sequences(self, with_semseg: bool = False) -&gt; List[str]:
     &#34;&#34;&#34; Lists all available sequence names
+
+    Args:
+        with_semseg: Set `True` if only sequences with semantic segmentation annotations should be returned. Set `False` to return all sequences (with or without semantic segmentation).
 
     Returns:
         List of sequence names.
@@ -185,7 +205,10 @@ Access to a specific sequence is provided by using the sequence name as a key on
 
 
     &#34;&#34;&#34;
-    return list(self._sequences.keys())</code></pre>
+    if with_semseg:
+        return [s for s in list(self._sequences.keys()) if self._sequences[s].semseg]
+    else:
+        return list(self._sequences.keys())</code></pre>
 </details>
 </dd>
 </dl>
