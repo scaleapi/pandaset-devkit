@@ -313,8 +313,12 @@ class Camera(Sensor):
             self._intrinsics_structure = intrinsics_file
 
     def _load_data_file(self, fp: str) -> JpegImageFile:
-        return Image.open(fp)
-
+        # solve this bug: https://github.com/python-pillow/Pillow/issues/1237
+        img = Image.open(fp)
+        image = img.copy()
+        img.close()
+        return image
+    
     def _load_intrinsics(self) -> None:
         with open(self._intrinsics_structure, 'r') as f:
             file_data = json.load(f)
