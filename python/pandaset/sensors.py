@@ -132,6 +132,10 @@ class Sensor:
 
 
 class Lidar(Sensor):
+    def load(self) -> None:
+        super().load()
+        self._load_laser()
+
     @property
     def _data_file_extension(self) -> str:
         return 'pkl.gz'
@@ -224,6 +228,15 @@ class Lidar(Sensor):
 
     def _load_data_file(self, fp: str) -> DataFrame:
         return pd.read_pickle(fp)
+
+    def _load_laser(self):
+        lasers_file_location = f'{self._directory}/laser.pkl'
+        if not os.path.exists(lasers_file_location):
+            return
+        lasers = pd.read_pickle(lasers_file_location)
+
+        for laser, df in zip(lasers, self._data):
+            df.loc[df.index[df['d'] == 0], "laser"] = laser
 
 
 class Camera(Sensor):
