@@ -55,6 +55,31 @@ class DataSet:
         else:
             return list(self._sequences.keys())
 
+    def unload(self, sequence: str):
+        """ Removes all sequence file data from memory if previously loaded from disk.
+
+        This is useful if you intend to iterate over all sequences and perform some
+        operation. If you do not unload the sequences, it quickly leads to sigkill.
+
+        Args:
+            sequence: The sequence name
+
+        Returns:
+            None
+
+        Examples:
+            >>> pandaset = DataSet('...')
+            >>> for sequence in pandaset.sequences():
+            >>>     seq = pandaset[sequence]
+            >>>     seq.load()
+            >>>     # do operations on sequence here...
+            >>>     # when finished, unload the sequence from memory
+            >>>     pandaset.unload(sequence)
+
+        """
+        if sequence in self._sequences:
+            del self._sequences[sequence]
+
 
 if __name__ == '__main__':
     pass
