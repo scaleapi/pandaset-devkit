@@ -314,6 +314,19 @@ Index(['class'], dtype='object')
 
 API Reference: [SemanticSegmentation class](https://scaleapi.github.io/pandaset-devkit/annotations.html#pandaset.annotations.SemanticSegmentation)
 
+You can visualise the semantic segmentation labels in top-down view in Matplotlib with the following code: 
+```
+import matplotlib.pyplot as plt
+from matplotlib import cm
 
+# Pick a colormap and print for each class what color it gets
+colormap = cm.get_cmap('gist_rainbow', 43)
+for key in seq002.semseg.classes:
+    plt.text(0.0, int(key)*0.1, seq002.semseg.classes[key], color=colormap(int(key)))
+plt.show()
 
+color_values = colormap(semseg0.values[:,0])
+plt.scatter(pc0_np[:,0], pc0_np[:,1], s=0.1, c=color_values)
+plt.show()
+```
 ![Header Animation](../assets/static/montage-semseg-projection.jpg)
