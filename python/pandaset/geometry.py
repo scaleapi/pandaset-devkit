@@ -57,6 +57,12 @@ def lidar_points_to_ego(points, lidar_pose):
     return (transform_matrix[:3, :3] @ points.T +  transform_matrix[:3, [3]]).T
 
 
+def ego_to_lidar_points(points, lidar_pose):
+    lidar_pose_mat = _heading_position_to_mat(
+        lidar_pose['heading'], lidar_pose['position'])
+    return (lidar_pose_mat[:3, :3] @ points.T +  lidar_pose_mat[:3, [3]]).T
+
+
 def center_box_to_corners(box):
     pos_x, pos_y, pos_z, dim_x, dim_y, dim_z, yaw = box
     half_dim_x, half_dim_y, half_dim_z = dim_x/2.0, dim_y/2.0, dim_z/2.0
