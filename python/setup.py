@@ -5,7 +5,7 @@ with open('requirements.txt', 'r') as f:
 
 setup(
     name='pandaset',
-    version='0.2dev',
+    version='0.3dev',
     author='Nisse Knudsen, Pengchuan Xiao',
     author_email='nisse@scale.com, xiaopengchuan_intern@hesaitech.com',
     packages=['pandaset'],
