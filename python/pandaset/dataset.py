@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import os
 from typing import overload, List, Dict
 
 from .sequence import Sequence
@@ -78,7 +79,7 @@ class DataSet:
 
         """
         if sequence in self._sequences:
-            del self._sequences[sequence]
+            self._sequences[sequence] = Sequence(os.path.join(self._directory, sequence))
 
 
 if __name__ == '__main__':
