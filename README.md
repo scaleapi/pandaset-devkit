@@ -190,15 +190,15 @@ True
 
 The LiDAR point clouds include by default the points from both the mechanical 360° LiDAR and the front-facing LiDAR. To select only one of the sensors, the `set_sensor` method is available.
 ```
->>> pc0 = s002.lidar[0]
+>>> pc0 = seq002.lidar[0]
 >>> print(pc0.shape)
 (166768, 6)
 >>> s002.lidar.set_sensor(0)  # set to include only mechanical 360° LiDAR
->>> pc0_sensor0 = s002.lidar[0]
+>>> pc0_sensor0 = seq002.lidar[0]
 >>> print(pc0_sensor0.shape)
 (106169, 6)
->>> s002.lidar.set_sensor(1)  # set to include only front-facing LiDAR
->>> pc0_sensor1 = s002.lidar[0]
+>>> seq002.lidar.set_sensor(1)  # set to include only front-facing LiDAR
+>>> pc0_sensor1 = seq002.lidar[0]
 >>> print(pc0_sensor1.shape)
 (60599, 6)
 ```
