@@ -29,7 +29,7 @@ mistune==0.8.4
 nbconvert==5.6.1
 nbformat==5.0.4
 notebook==6.0.3
-numpy==1.18.2
+numpy==1.22.0
 open3d==0.9.0.0
 pandas==1.0.3
 pandaset==0.2.dev0
