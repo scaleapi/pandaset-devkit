@@ -134,7 +134,7 @@ class Sensor:
 class Lidar(Sensor):
     @property
     def _data_file_extension(self) -> str:
-        return 'pkl.gz'
+        return 'pkl'
 
     @property
     def data(self) -> List[pd.DataFrame]:
