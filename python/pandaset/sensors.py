@@ -202,6 +202,16 @@ class Lidar(Sensor):
         self._sensor_id = -1
         Sensor.__init__(self, directory)
 
+    def _load_data_structure(self) -> None:
+        gz = sorted(glob.glob(f'{self._directory}/*.pkl.gz'))
+        plain = sorted(glob.glob(f'{self._directory}/*.pkl'))
+        if gz:
+            self._data_structure = gz
+        elif plain:
+            self._data_structure = plain
+        else:
+            super()._load_data_structure()
+
     @overload
     def __getitem__(self, item: int) -> DataFrame:
         ...
